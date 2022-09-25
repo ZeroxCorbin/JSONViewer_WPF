@@ -7,10 +7,10 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Newtonsoft.Json.Linq;
 
-namespace JsonViewer
+namespace JSONViewer_WPF
 {
     /// <summary>
-    /// Interaction logic for JsonViewer.xaml
+    /// Interaction logic for JSONViewer_WPF.xaml
     /// </summary>
     public partial class JsonViewer : UserControl
     {
@@ -20,34 +20,6 @@ namespace JsonViewer
         public JsonViewer()
         {
             InitializeComponent();
-        }
-
-        public void Load(string json, string title)
-        {
-            Title.Content = title;
-
-            JsonTreeView.ItemsSource = null;
-            JsonTreeView.Items.Clear();
-
-            var children = new List<JToken>();
-
-            try
-            {
-                var token = JToken.Parse(json);
-
-                if (token != null)
-                {
-                    children.Add(token);
-                }
-
-                JsonTreeView.ItemsSource = children;
-
-                ToggleFirstItem(true);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Could not open the JSON string:\r\n" + ex.Message);
-            }
         }
 
         private void JValue_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

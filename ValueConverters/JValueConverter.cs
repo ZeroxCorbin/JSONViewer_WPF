@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using Newtonsoft.Json.Linq;
 
-namespace JsonViewer.ValueConverters
+namespace JSONViewer_WPF.ValueConverters
 {
     public sealed class JValueConverter : IValueConverter
     {
