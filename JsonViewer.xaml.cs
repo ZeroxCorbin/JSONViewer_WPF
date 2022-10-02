@@ -24,14 +24,14 @@ namespace JSONViewer_WPF
 
         private void JValue_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ClickCount != 2) 
-                return;
+            //if (e.ClickCount != 2) 
+            //    return;
             
-            var tb = sender as TextBlock;
-            if (tb != null)
-            {
-                Clipboard.SetText(tb.Text); 
-            }
+            //var tb = sender as TextBlock;
+            //if (tb != null)
+            //{
+            //    Clipboard.SetText(tb.Text); 
+            //}
         }
 
         private void ExpandAll(object sender, RoutedEventArgs e)
@@ -64,7 +64,7 @@ namespace JSONViewer_WPF
             _timer.Start();
         }
 
-        private void ToggleFirstItem(bool isExpanded)
+        private void ToggleFirstItem()
         {
             if (JsonTreeView.Items.IsEmpty)
                 return;
@@ -75,7 +75,7 @@ namespace JSONViewer_WPF
             Cursor = Cursors.Wait;
             _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(500), DispatcherPriority.Normal, delegate
             {
-                ToggleFirstItem(JsonTreeView, JsonTreeView.Items, isExpanded);
+                ToggleFirstItem(JsonTreeView, JsonTreeView.Items);
                 //System.Windows.Controls.DockPanel.Opacity = 1.0;
                 //System.Windows.Controls.DockPanel.IsEnabled = true;
                 _timer.Stop();
@@ -100,7 +100,7 @@ namespace JSONViewer_WPF
             }
         }
 
-        private void ToggleFirstItem(ItemsControl parentContainer, ItemCollection items, bool isExpanded)
+        private void ToggleFirstItem(ItemsControl parentContainer, ItemCollection items, bool isExpanded = true)
         {
             var itemGen = parentContainer.ItemContainerGenerator;
             if (itemGen.Status == Generated)

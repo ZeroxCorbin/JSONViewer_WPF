@@ -40,6 +40,9 @@
                 <TextBlock Text="{}{ }" Foreground="#729fcf"/>
             </StackPanel>
         </HierarchicalDataTemplate>
+        <Style x:Key="RootTreeViewItemStyle" TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+            <Setter Property="IsExpanded" Value="False"/>
+        </Style>
         <DataTemplate x:Key="PrimitivePropertyTemplate" DataType="{x:Type jlinq:JProperty}" >
 
             <StackPanel Orientation="Horizontal" Margin="1">
@@ -47,7 +50,7 @@
                 <TextBlock Text=" : "/>
                 <TextBlock Text="  "/>
 
-                <TextBlock MouseLeftButtonDown="JValue_OnMouseLeftButtonDown" Width="140" 
+                <TextBlock MouseLeftButtonDown="JValue_OnMouseLeftButtonDown" MaxWidth="140" 
                            TextWrapping="Wrap" Text="{Binding Path=Value, Converter={StaticResource JValueConverter}}" 
                            Foreground="{Binding Converter={StaticResource JPropertyTypeToColorConverter}}" />
             </StackPanel>
@@ -115,12 +118,8 @@
         </Border>
 
         <Border Grid.Row="1" BorderThickness="1" Padding="2" Margin="2" CornerRadius="3" BorderBrush="{DynamicResource MahApps.Brushes.Accent}">
-            <TreeView ItemsSource="{Binding Children}" Margin="3" Name="JsonTreeView" IsTextSearchEnabled="True" ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}" BorderThickness="0">
-                <TreeView.ItemContainerStyle>
-                    <Style TargetType="{x:Type TreeViewItem}" >
-                        <Setter Property="IsExpanded" Value="True" />
-                    </Style>
-                </TreeView.ItemContainerStyle>
+            <TreeView ItemsSource="{Binding Children}" Margin="3" Name="JsonTreeView" IsTextSearchEnabled="True" ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}" ItemContainerStyle="{StaticResource RootTreeViewItemStyle}" BorderThickness="0">
+
             </TreeView>
         </Border>
     </Grid>

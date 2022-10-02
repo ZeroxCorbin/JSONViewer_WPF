@@ -9,7 +9,9 @@ namespace JSONViewer_WPF
 {
     public class JsonViewerViewModel : Core.BaseViewModel
     {
-        public ObservableCollection<JToken> Children { get; } = new ObservableCollection<JToken>();
+        private JToken children;
+        public JToken Children { get => children; set => SetProperty(ref children, value); }
+
 
         public string Title { get; private set; }
 
@@ -17,23 +19,9 @@ namespace JSONViewer_WPF
         {
             Title = title;
 
-            //JsonTreeView.ItemsSource = null;
-            //JsonTreeView.Items.Clear();
-
-            Children.Clear();
-
             try
             {
-                var token = JToken.Parse(json);
-
-                if (token != null)
-                {
-                    Children.Add(token);
-                }
-
-                //JsonTreeView.ItemsSource = children;
-
-                //ToggleFirstItem(true);
+                Children = JToken.Parse(json);
             }
             catch (Exception ex)
             {
@@ -41,6 +29,6 @@ namespace JSONViewer_WPF
             }
         }
 
-        public void Clear() => Children.Clear();
+        public void Clear() => Children = null;
     }
 }
