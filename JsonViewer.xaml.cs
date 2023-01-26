@@ -17,21 +17,115 @@ namespace JSONViewer_WPF
         private const GeneratorStatus Generated = GeneratorStatus.ContainersGenerated;
         private DispatcherTimer _timer;
 
+
+        //private string json;
+
+        //public string JSON
+        //{
+        //    get { return json; }
+        //    set
+        //    { 
+        //        json = value;
+
+        //        Load(json, "");
+        //    }
+        //}
+
+        // Register a dependency property with the specified property name,
+        // property type, owner type, and property metadata. Store the dependency
+        // property identifier as a public static readonly member of the class.
+        public static readonly DependencyProperty JSONProperty =
+            DependencyProperty.Register(
+              name: "JSON",
+              propertyType: typeof(string),
+              ownerType: typeof(JsonViewer),
+              typeMetadata: new FrameworkPropertyMetadata(
+                  defaultValue: "",
+                  flags: FrameworkPropertyMetadataOptions.AffectsRender,
+                  propertyChangedCallback: new PropertyChangedCallback(JSONProperty_OnChanged))
+            );
+
+        private static void JSONProperty_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = (JsonViewer)d;
+            control.Load((string)e.NewValue, "");
+        }
+
+        public string JSON
+        {
+            get => (string)GetValue(JSONProperty);
+            set => SetValue(JSONProperty, value);
+        }
+
+        public static readonly DependencyProperty TitleVisibleProperty =
+    DependencyProperty.Register(
+      name: "TitleVisible",
+      propertyType: typeof(bool),
+      ownerType: typeof(JsonViewer),
+      typeMetadata: new FrameworkPropertyMetadata(
+          defaultValue: true,
+          flags: FrameworkPropertyMetadataOptions.AffectsRender,
+          propertyChangedCallback: new PropertyChangedCallback(TitleVisibleProperty_OnChanged))
+    );
+
+        private static void TitleVisibleProperty_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+           var control = (JsonViewer)d;
+            control.Title.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public bool TitleVisible
+        {
+            get => (bool)GetValue(JSONProperty);
+            set => SetValue(JSONProperty, value);
+        }
+
         public JsonViewer()
         {
             InitializeComponent();
         }
 
+        public void Load(string json, string title)
+        {
+            if (string.IsNullOrEmpty(json))
+                return;
+
+            Title.Content = title;
+
+            JsonTreeView.ItemsSource = null;
+            JsonTreeView.Items.Clear();
+
+            var children = new List<JToken>();
+
+            try
+            {
+                var token = JToken.Parse(json);
+
+                if (token != null)
+                {
+                    children.Add(token);
+                }
+
+                JsonTreeView.ItemsSource = children;
+
+                ToggleFirstItem(true);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not open the JSON string:\r\n" + ex.Message);
+            }
+        }
+
         private void JValue_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            //if (e.ClickCount != 2) 
-            //    return;
-            
-            //var tb = sender as TextBlock;
-            //if (tb != null)
-            //{
-            //    Clipboard.SetText(tb.Text); 
-            //}
+            if (e.ClickCount != 2)
+                return;
+
+            var tb = sender as TextBlock;
+            if (tb != null)
+            {
+                Clipboard.SetText(tb.Text);
+            }
         }
 
         private void ExpandAll(object sender, RoutedEventArgs e)
@@ -56,6 +150,8 @@ namespace JSONViewer_WPF
             _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(500), DispatcherPriority.Normal, delegate
             {
                 ToggleItems(JsonTreeView, JsonTreeView.Items, isExpanded);
+                if(!isExpanded)
+                    ToggleFirstItem(JsonTreeView, JsonTreeView.Items, true);
                 //System.Windows.Controls.DockPanel.Opacity = 1.0;
                 //System.Windows.Controls.DockPanel.IsEnabled = true;
                 _timer.Stop();
@@ -64,7 +160,7 @@ namespace JSONViewer_WPF
             _timer.Start();
         }
 
-        private void ToggleFirstItem()
+        private void ToggleFirstItem(bool isExpanded)
         {
             if (JsonTreeView.Items.IsEmpty)
                 return;
@@ -75,7 +171,7 @@ namespace JSONViewer_WPF
             Cursor = Cursors.Wait;
             _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(500), DispatcherPriority.Normal, delegate
             {
-                ToggleFirstItem(JsonTreeView, JsonTreeView.Items);
+                ToggleFirstItem(JsonTreeView, JsonTreeView.Items, isExpanded);
                 //System.Windows.Controls.DockPanel.Opacity = 1.0;
                 //System.Windows.Controls.DockPanel.IsEnabled = true;
                 _timer.Stop();
@@ -100,7 +196,7 @@ namespace JSONViewer_WPF
             }
         }
 
-        private void ToggleFirstItem(ItemsControl parentContainer, ItemCollection items, bool isExpanded = true)
+        private void ToggleFirstItem(ItemsControl parentContainer, ItemCollection items, bool isExpanded)
         {
             var itemGen = parentContainer.ItemContainerGenerator;
             if (itemGen.Status == Generated)

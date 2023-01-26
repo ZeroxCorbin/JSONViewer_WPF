@@ -11,8 +11,8 @@ namespace JSONViewer_WPF.ValueConverters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var jToken = value as JToken;
-            if(jToken == null)
-                throw new Exception("Wrong type for this converter");
+            if (jToken == null)
+                return null;//throw new Exception("Wrong type for this converter");
 
             switch (jToken.Type)
             {
@@ -23,7 +23,8 @@ namespace JSONViewer_WPF.ValueConverters
                     var propertyArrayLen = jToken.Children().FirstOrDefault().Children().Count();
                     return string.Format("[ {0} ]", propertyArrayLen);
                 default:
-                    throw new Exception("Type should be JProperty or JArray");
+                    return null;
+                    //throw new Exception("Type should be JProperty or JArray");
             }
         }
 
