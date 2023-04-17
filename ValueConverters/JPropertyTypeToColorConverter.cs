@@ -24,6 +24,8 @@ namespace JSONViewer_WPF.ValueConverters
                         return new BrushConverter().ConvertFrom("#c4a000");
                     case JTokenType.Null:
                         return new SolidColorBrush(Colors.OrangeRed);
+                    case JTokenType.Date:
+                        return new SolidColorBrush(Colors.LightGreen);
                 }
             }
 

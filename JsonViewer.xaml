@@ -46,7 +46,7 @@
                 <TextBlock Text=" : "/>
                 <TextBlock Text="  "/>
 
-                <TextBlock MouseLeftButtonDown="JValue_OnMouseLeftButtonDown" Width="140" 
+                <TextBlock MouseLeftButtonDown="JValue_OnMouseLeftButtonDown" MaxWidth="420" 
                            TextWrapping="Wrap" Text="{Binding Path=Value, Converter={StaticResource JValueConverter}}" 
                            Foreground="{Binding Converter={StaticResource JPropertyTypeToColorConverter}}" />
             </StackPanel>
@@ -72,7 +72,7 @@
                                              PrimitivePropertyTemplate ="{StaticResource PrimitivePropertyTemplate}"/>
 
         <DataTemplate DataType="{x:Type jlinq:JValue}">
-            <TextBlock MouseLeftButtonDown="JValue_OnMouseLeftButtonDown" Width="300" 
+            <TextBlock MouseLeftButtonDown="JValue_OnMouseLeftButtonDown" MaxWidth="420" 
                            TextWrapping="Wrap" Text="{Binding Converter={StaticResource JValueConverter}}" 
                            Foreground="{Binding Converter={StaticResource JValueTypeToColorConverter}}" />
         </DataTemplate>
