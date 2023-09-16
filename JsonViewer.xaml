@@ -100,7 +100,18 @@
                     <Label Content="Null" Foreground="WhiteSmoke" Background="OrangeRed" />
                 </Border>
             </StackPanel>-->
-                <Label Name="Title" Margin="5" HorizontalAlignment="Center"/>
+                <Label Name="Title" Margin="5" HorizontalAlignment="Center">
+                    <Label.Style>
+                        <Style TargetType="{x:Type Label}" BasedOn="{StaticResource {x:Type Label}}">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=Content, ElementName=Title}" Value="">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Label.Style>
+                </Label>
                 
                 <StackPanel Orientation="Horizontal" >
                     <Button Click="ExpandAll" ToolTip="Expand All" Margin="3">

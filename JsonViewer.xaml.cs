@@ -70,7 +70,7 @@ namespace JSONViewer_WPF
 
         private static void TitleVisibleProperty_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-           var control = (JsonViewer)d;
+            var control = (JsonViewer)d;
             control.Title.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed;
         }
 
@@ -150,7 +150,7 @@ namespace JSONViewer_WPF
             _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(500), DispatcherPriority.Normal, delegate
             {
                 ToggleItems(JsonTreeView, JsonTreeView.Items, isExpanded);
-                if(!isExpanded)
+                if (!isExpanded)
                     ToggleFirstItem(JsonTreeView, JsonTreeView.Items, true);
                 //System.Windows.Controls.DockPanel.Opacity = 1.0;
                 //System.Windows.Controls.DockPanel.IsEnabled = true;
