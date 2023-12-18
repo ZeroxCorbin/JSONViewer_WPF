@@ -114,11 +114,11 @@
                 </Label>
                 
                 <StackPanel Orientation="Horizontal" >
-                    <Button Click="ExpandAll" ToolTip="Expand All" Margin="3">
-                        <IconPacks:Material Kind="ExpandAll" Height="16"/>
+                    <Button Click="ExpandAll" ToolTip="Expand All" Margin="3" Style="{StaticResource MahApps.Styles.Button}">
+                        <IconPacks:Material Kind="ExpandAll"  Height="16" Width="16"/>
                     </Button>
-                    <Button Click="CollapseAll" ToolTip="Collapse All" Margin="3">
-                        <IconPacks:Material Kind="CollapseAll" Height="16"/>
+                    <Button Click="CollapseAll" ToolTip="Collapse All" Margin="3" Style="{StaticResource MahApps.Styles.Button}">
+                        <IconPacks:Material Kind="CollapseAll"  Height="16" Width="16"/>
                     </Button>
                 </StackPanel>
                 
