@@ -62,46 +62,28 @@ namespace JSONViewer_WPF
             ownerType: typeof(JsonViewer),
             typeMetadata: new FrameworkPropertyMetadata(
                 defaultValue: "",
-                flags: FrameworkPropertyMetadataOptions.AffectsRender,
-                propertyChangedCallback: new PropertyChangedCallback(TitleProperty_OnChanged))
+                flags: FrameworkPropertyMetadataOptions.AffectsRender)
             );
-        private static void TitleProperty_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var control = (JsonViewer)d;
-            control.lblTitle.Content = (string)e.NewValue;
 
-            if (string.IsNullOrEmpty((string)control.lblTitle.Content))
-                control.lblTitle.Visibility = Visibility.Collapsed;
-            else
-                control.lblTitle.Visibility = Visibility.Visible;
-
-
-        }
         public string Title
         {
             get => (string)GetValue(TitleProperty);
             set => SetValue(TitleProperty, value);
         }
 
-        public static readonly DependencyProperty TitleVisibleProperty =
+        public static readonly DependencyProperty HideButtonsProperty =
             DependencyProperty.Register(
-            name: "TitleVisible",
+            name: "HideButtons",
             propertyType: typeof(bool),
             ownerType: typeof(JsonViewer),
             typeMetadata: new FrameworkPropertyMetadata(
-                defaultValue: true,
-                flags: FrameworkPropertyMetadataOptions.AffectsRender,
-                propertyChangedCallback: new PropertyChangedCallback(TitleVisibleProperty_OnChanged))
+                defaultValue: false,
+                flags: FrameworkPropertyMetadataOptions.AffectsRender)
             );
-        private static void TitleVisibleProperty_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public bool HideButtons
         {
-            var control = (JsonViewer)d;
-            control.lblTitle.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed;
-        }
-        public bool TitleVisible
-        {
-            get => (bool)GetValue(TitleVisibleProperty);
-            set => SetValue(TitleVisibleProperty, value);
+            get => (bool)GetValue(HideButtonsProperty);
+            set => SetValue(HideButtonsProperty, value);
         }
 
         public JsonViewer()
@@ -115,28 +97,23 @@ namespace JSONViewer_WPF
                 return;
 
             if (!string.IsNullOrEmpty(title))
-                lblTitle.Content = title;
-
-            if (string.IsNullOrEmpty((string)lblTitle.Content))
-                TitleVisible = false;
-            else
-                TitleVisible = true;
+                Title = title;
 
             JsonTreeView.ItemsSource = null;
             JsonTreeView.Items.Clear();
 
-            var children = new List<JToken>();
+            //var children = new List<JToken>();
 
             try
             {
                 var token = JToken.Parse(json);
 
-                if (token != null)
-                {
-                    children.Add(token);
-                }
+                //if (token != null)
+                //{
+                //    children.Add(token);
+                //}
 
-                JsonTreeView.ItemsSource = children;
+                JsonTreeView.ItemsSource = token;
 
                 ToggleFirstItem(true);
             }
@@ -243,7 +220,12 @@ namespace JSONViewer_WPF
             {
                 itemGen.StatusChanged += delegate
                 {
+                    if (items.Count <= 0) return;
+
                     var tvi = itemGen.ContainerFromItem(items[0]) as TreeViewItem;
+
+                    if (tvi == null) return;
+
                     tvi.IsExpanded = isExpanded;
 
                     //if (tvi.Items.Count == 1)
