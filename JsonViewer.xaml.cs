@@ -44,40 +44,64 @@ namespace JSONViewer_WPF
                   flags: FrameworkPropertyMetadataOptions.AffectsRender,
                   propertyChangedCallback: new PropertyChangedCallback(JSONProperty_OnChanged))
             );
-
         private static void JSONProperty_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = (JsonViewer)d;
             control.Load((string)e.NewValue, "");
         }
-
         public string JSON
         {
             get => (string)GetValue(JSONProperty);
             set => SetValue(JSONProperty, value);
         }
 
-        public static readonly DependencyProperty TitleVisibleProperty =
-    DependencyProperty.Register(
-      name: "TitleVisible",
-      propertyType: typeof(bool),
-      ownerType: typeof(JsonViewer),
-      typeMetadata: new FrameworkPropertyMetadata(
-          defaultValue: true,
-          flags: FrameworkPropertyMetadataOptions.AffectsRender,
-          propertyChangedCallback: new PropertyChangedCallback(TitleVisibleProperty_OnChanged))
-    );
+        public static readonly DependencyProperty TitleProperty =
+            DependencyProperty.Register(
+            name: "Title",
+            propertyType: typeof(string),
+            ownerType: typeof(JsonViewer),
+            typeMetadata: new FrameworkPropertyMetadata(
+                defaultValue: "",
+                flags: FrameworkPropertyMetadataOptions.AffectsRender,
+                propertyChangedCallback: new PropertyChangedCallback(TitleProperty_OnChanged))
+            );
+        private static void TitleProperty_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = (JsonViewer)d;
+            control.lblTitle.Content = (string)e.NewValue;
 
+            if (string.IsNullOrEmpty((string)control.lblTitle.Content))
+                control.lblTitle.Visibility = Visibility.Collapsed;
+            else
+                control.lblTitle.Visibility = Visibility.Visible;
+
+
+        }
+        public string Title
+        {
+            get => (string)GetValue(TitleProperty);
+            set => SetValue(TitleProperty, value);
+        }
+
+        public static readonly DependencyProperty TitleVisibleProperty =
+            DependencyProperty.Register(
+            name: "TitleVisible",
+            propertyType: typeof(bool),
+            ownerType: typeof(JsonViewer),
+            typeMetadata: new FrameworkPropertyMetadata(
+                defaultValue: true,
+                flags: FrameworkPropertyMetadataOptions.AffectsRender,
+                propertyChangedCallback: new PropertyChangedCallback(TitleVisibleProperty_OnChanged))
+            );
         private static void TitleVisibleProperty_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = (JsonViewer)d;
-            control.Title.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed;
+            control.lblTitle.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed;
         }
-
         public bool TitleVisible
         {
-            get => (bool)GetValue(JSONProperty);
-            set => SetValue(JSONProperty, value);
+            get => (bool)GetValue(TitleVisibleProperty);
+            set => SetValue(TitleVisibleProperty, value);
         }
 
         public JsonViewer()
@@ -90,7 +114,13 @@ namespace JSONViewer_WPF
             if (string.IsNullOrEmpty(json))
                 return;
 
-            Title.Content = title;
+            if (!string.IsNullOrEmpty(title))
+                lblTitle.Content = title;
+
+            if (string.IsNullOrEmpty((string)lblTitle.Content))
+                TitleVisible = false;
+            else
+                TitleVisible = true;
 
             JsonTreeView.ItemsSource = null;
             JsonTreeView.Items.Clear();
