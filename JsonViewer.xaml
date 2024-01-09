@@ -120,9 +120,8 @@
                     </Button>
 
                     <Button Click="CollapseAll" ToolTip="Collapse All" Margin="0" Style="{StaticResource MahApps.Styles.Button}" BorderThickness="0">
-                        <IconPacks:Material Kind="CollapseAll"  Height="16" Width="16"/>
+                        <IconPacks:PackIconMaterial Kind="CollapseAll"  Height="16" Width="16"/>
                     </Button>
-
                 </StackPanel>
 
                 <StackPanel VerticalAlignment="Center">
@@ -138,10 +137,29 @@
                     </StackPanel.Style>
 
                     <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="10,6" />
-                    
+
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Right">
+                    <StackPanel.Style>
+                        <Style TargetType="{x:Type StackPanel}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ShowSaveButton, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+
+                    <Button x:Name="btnSaveJSON" Margin="1" Style="{StaticResource MahApps.Styles.Button}" BorderThickness="0" Click="btnSaveJSON_Click">
+                        <IconPacks:PackIconMaterial Kind="ContentSave" Height="16" Width="16"/>
+                    </Button>
                 </StackPanel>
             </StackPanel>
+
         </Border>
+            
         <Border Grid.Row="1" BorderThickness="1" Padding="2" Margin="1" CornerRadius="3" BorderBrush="{DynamicResource MahApps.Brushes.Accent}">
             <Grid>
                 <TreeView Margin="3" Name="JsonTreeView" IsTextSearchEnabled="True" ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}" BorderThickness="0">

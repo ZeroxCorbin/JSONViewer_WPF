@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 
 namespace JSONViewer_WPF
@@ -55,6 +56,7 @@ namespace JSONViewer_WPF
             set => SetValue(JSONProperty, value);
         }
 
+
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register(
             name: "Title",
@@ -71,6 +73,7 @@ namespace JSONViewer_WPF
             set => SetValue(TitleProperty, value);
         }
 
+
         public static readonly DependencyProperty HideButtonsProperty =
             DependencyProperty.Register(
             name: "HideButtons",
@@ -85,6 +88,22 @@ namespace JSONViewer_WPF
             get => (bool)GetValue(HideButtonsProperty);
             set => SetValue(HideButtonsProperty, value);
         }
+
+        public static readonly DependencyProperty ShowSaveButtonProperty =
+            DependencyProperty.Register(
+            name: "ShowSaveButton",
+            propertyType: typeof(bool),
+            ownerType: typeof(JsonViewer),
+            typeMetadata: new FrameworkPropertyMetadata(
+                defaultValue: false,
+                flags: FrameworkPropertyMetadataOptions.AffectsRender)
+            );
+        public bool ShowSaveButton
+        {
+            get => (bool)GetValue(ShowSaveButtonProperty);
+            set => SetValue(ShowSaveButtonProperty, value);
+        }
+
 
         public JsonViewer()
         {
@@ -247,6 +266,34 @@ namespace JSONViewer_WPF
                 tvi.IsExpanded = isExpanded;
                 ToggleItems(tvi, tvi.Items, isExpanded);
             }
+        }
+
+        private void btnSaveJSON_Click(object sender, RoutedEventArgs e)
+        {
+            string path;
+            if ((path = GetSaveFilePath("", "JSON|*.json", "Save JSON")) == "")
+                return;
+
+            try
+            {
+                System.IO.File.WriteAllText(path, JSON);
+            }
+            catch { }
+            
+        }
+        private string GetSaveFilePath(string fileName, string filter, string title)
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog
+            {
+                Filter = filter,//|Gif Image|*.gif|JPeg Image|*.jpg";
+                Title = title,
+                FileName = fileName
+            };
+
+            if (saveFileDialog1.ShowDialog() == true)
+                return saveFileDialog1.FileName;
+            else
+                return "";
         }
     }
 }
