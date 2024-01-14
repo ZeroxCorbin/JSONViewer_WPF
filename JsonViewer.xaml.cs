@@ -38,7 +38,7 @@ namespace JSONViewer_WPF
         public static readonly DependencyProperty JSONProperty =
             DependencyProperty.Register(
               name: "JSON",
-              propertyType: typeof(string),
+              propertyType: typeof(object),
               ownerType: typeof(JsonViewer),
               typeMetadata: new FrameworkPropertyMetadata(
                   defaultValue: "",
@@ -48,14 +48,16 @@ namespace JSONViewer_WPF
         private static void JSONProperty_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = (JsonViewer)d;
-            control.Load((string)e.NewValue, "");
+            if(e.NewValue.GetType()  == typeof(string))
+                control.Load((string)e.NewValue);
+            else
+                control.Load(e.NewValue);
         }
         public string JSON
         {
             get => (string)GetValue(JSONProperty);
             set => SetValue(JSONProperty, value);
         }
-
 
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register(
@@ -110,29 +112,31 @@ namespace JSONViewer_WPF
             InitializeComponent();
         }
 
-        public void Load(string json, string title)
+        public void Load(string json)
         {
             if (string.IsNullOrEmpty(json))
                 return;
 
-            if (!string.IsNullOrEmpty(title))
-                Title = title;
+            try
+            {
+                JsonTreeView.ItemsSource = JToken.Parse(json);
 
-            JsonTreeView.ItemsSource = null;
-            JsonTreeView.Items.Clear();
+                ToggleFirstItem(true);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not open the JSON string:\r\n" + ex.Message);
+            }
+        }
 
-            //var children = new List<JToken>();
+        public void Load(object obj)
+        {
+            if (obj == null)
+                return;
 
             try
             {
-                var token = JToken.Parse(json);
-
-                //if (token != null)
-                //{
-                //    children.Add(token);
-                //}
-
-                JsonTreeView.ItemsSource = token;
+                JsonTreeView.ItemsSource = JToken.FromObject(obj);
 
                 ToggleFirstItem(true);
             }
