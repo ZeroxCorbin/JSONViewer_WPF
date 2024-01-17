@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Threading;
+using JSONViewer_WPF.JsonHelpers;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace JSONViewer_WPF
@@ -47,8 +51,9 @@ namespace JSONViewer_WPF
             );
         private static void JSONProperty_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            if (e.NewValue == null) return;
             var control = (JsonViewer)d;
-            if(e.NewValue.GetType()  == typeof(string))
+            if (e.NewValue.GetType() == typeof(string))
                 control.Load((string)e.NewValue);
             else
                 control.Load(e.NewValue);
@@ -112,6 +117,53 @@ namespace JSONViewer_WPF
             InitializeComponent();
         }
 
+        private void IterateJToken(JToken token)
+        {
+            foreach (var tok in token)
+            {
+                //If the Token has children, loop through them first
+                if (tok.HasValues)
+                {
+                    IterateJToken(tok);
+                    continue;
+                }
+
+                //If the Token is a value and not a parent, then check for a matching Token
+                if (UpdateMatchingItemSource((JToken)JsonTreeView.ItemsSource, tok))
+                    return;
+            }
+        }
+
+        private bool UpdateMatchingItemSource(JToken inside, JToken find)
+        {
+            foreach (var ins in inside)
+            {
+                //If the Token has children, loop through them first
+                if (ins.HasValues)
+                {
+                    if (UpdateMatchingItemSource(ins, find))
+                        return true;
+                    continue;
+                }
+
+                //var customObject = ins.ToObject<CustomNotifyPropertyChangedObject>();
+
+                if (((JValue)ins).Path == ((JValue)find).Path)
+                {
+                    ((JValue)ins).Value = ((JValue)find).Value;
+                    return true;
+                }
+                else
+                {
+
+                }
+
+            }
+
+            return false;
+        }
+
+        bool once = false;
         public void Load(string json)
         {
             if (string.IsNullOrEmpty(json))
@@ -119,9 +171,7 @@ namespace JSONViewer_WPF
 
             try
             {
-                JsonTreeView.ItemsSource = JToken.Parse(json);
-
-                ToggleFirstItem(true);
+                JsonTreeView.ItemsSource = JsonConvert.DeserializeObject<JToken>(json);
             }
             catch (Exception ex)
             {
@@ -137,7 +187,6 @@ namespace JSONViewer_WPF
             try
             {
                 JsonTreeView.ItemsSource = JToken.FromObject(obj);
-
                 ToggleFirstItem(true);
             }
             catch (Exception ex)
@@ -283,7 +332,7 @@ namespace JSONViewer_WPF
                 System.IO.File.WriteAllText(path, JSON);
             }
             catch { }
-            
+
         }
         private string GetSaveFilePath(string fileName, string filter, string title)
         {
