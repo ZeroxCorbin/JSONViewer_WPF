@@ -51,10 +51,12 @@ namespace JSONViewer_WPF
             );
         private static void JSONProperty_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue == null) return;
+            if (e.NewValue == null)
+                return;
+
             var control = (JsonViewer)d;
-            if (e.NewValue.GetType() == typeof(string))
-                control.Load((string)e.NewValue);
+            if (e.NewValue is string str)
+                control.Load(str);
             else
                 control.Load(e.NewValue);
         }
@@ -186,7 +188,8 @@ namespace JSONViewer_WPF
 
             try
             {
-                JsonTreeView.ItemsSource = JToken.FromObject(obj);
+                JsonTreeView.ItemsSource = JsonConvert.DeserializeObject<JToken>(JsonConvert.SerializeObject(obj));
+                //JsonTreeView.ItemsSource = JToken.FromObject(obj);
                 ToggleFirstItem(true);
             }
             catch (Exception ex)

@@ -35,6 +35,10 @@ namespace JSONViewer_WPF.TemplateSelectors
 
                 }
             }
+            //if (type == typeof(JValue))
+            //{
+            //    return frameworkElement.FindResource("PrimitivePropertyTemplate") as DataTemplate;
+            //}
 
             var key = new DataTemplateKey(type);
             return frameworkElement.FindResource(key) as DataTemplate;
