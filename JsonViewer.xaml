@@ -89,11 +89,15 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" BorderThickness="1" CornerRadius="3" BorderBrush="{DynamicResource MahApps.Brushes.Accent}">
+        <Border Grid.Row="0" CornerRadius="3" BorderBrush="{DynamicResource MahApps.Brushes.Accent}">
             <Border.Style>
                 <Style TargetType="{x:Type Border}">
+                    
                     <Setter Property="Visibility" Value="Visible"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    
                     <Style.Triggers>
+                        
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding HideButtons, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True"/>
@@ -103,6 +107,10 @@
                                 <Setter Property="Visibility" Value="Collapsed"/>
                             </MultiDataTrigger.Setters>
                         </MultiDataTrigger>
+
+                        <DataTrigger Binding="{Binding HideBorders, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Border.Style>
@@ -165,7 +173,18 @@
 
         </Border>
 
-        <Border Grid.Row="1" BorderThickness="1" Padding="2" CornerRadius="3" BorderBrush="{DynamicResource MahApps.Brushes.Accent}">
+        <Border Grid.Row="1" Padding="2" CornerRadius="3" BorderBrush="{DynamicResource MahApps.Brushes.Accent}">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HideBorders, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            
             <TreeView Margin="3" Name="JsonTreeView" IsTextSearchEnabled="True" BorderThickness="0"
                 ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}">
                 <TreeView.ItemContainerStyle>
