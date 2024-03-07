@@ -20,6 +20,7 @@
 
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Dark.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
+
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Grey.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Secondary/MaterialDesignColor.DeepPurple.xaml" />
 
@@ -48,118 +49,112 @@
             <SolidColorBrush x:Key="MahApps.Metro.Brushes.ToggleSwitchButton.OnSwitchBrush.Win10" Color="{DynamicResource Primary500}" />
             <SolidColorBrush x:Key="MahApps.Metro.Brushes.ToggleSwitchButton.OnSwitchMouseOverBrush.Win10" Color="{DynamicResource Primary400}" />
             <SolidColorBrush x:Key="MahApps.Metro.Brushes.ToggleSwitchButton.ThumbIndicatorCheckedBrush.Win10" Color="{DynamicResource Primary500Foreground}" />
-        
+
             <valueConverters:MethodToValueConverter x:Key="MethodToValueConverter"/>
-        <valueConverters:ComplexPropertyMethodToValueConverter x:Key="ComplexPropertyMethodToValueConverter"/>
-        <valueConverters:JValueConverter x:Key="JValueConverter"/>
-        <valueConverters:JPropertyTypeToColorConverter x:Key="JPropertyTypeToColorConverter"/>
-        <valueConverters:JValueTypeToColorConverter x:Key="JValueTypeToColorConverter"/>
-        <valueConverters:JArrayLengthConverter x:Key="JArrayLengthConverter"/>
+            <valueConverters:ComplexPropertyMethodToValueConverter x:Key="ComplexPropertyMethodToValueConverter"/>
+            <valueConverters:JValueConverter x:Key="JValueConverter"/>
+            <valueConverters:JPropertyTypeToColorConverter x:Key="JPropertyTypeToColorConverter"/>
+            <valueConverters:JValueTypeToColorConverter x:Key="JValueTypeToColorConverter"/>
+            <valueConverters:JArrayLengthConverter x:Key="JArrayLengthConverter"/>
 
 
-        <HierarchicalDataTemplate DataType="{x:Type jlinq:JArray}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
-            <StackPanel Orientation="Horizontal" Margin="1">
-                <TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>
-                <TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
-            </StackPanel>
-        </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate  x:Key="ArrayPropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
-            <StackPanel Orientation="Horizontal" Margin="1">
-                <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
-                <TextBlock Text=" "/>
-                <!--<TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>-->
-                <TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
-            </StackPanel>
-        </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type jlinq:JArray}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+                <StackPanel Orientation="Horizontal" Margin="1">
+                    <TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
+                </StackPanel>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate  x:Key="ArrayPropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
+                <StackPanel Orientation="Horizontal" Margin="1">
+                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+                    <TextBlock Text=" "/>
+                    <!--<TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>-->
+                    <TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
+                </StackPanel>
+            </HierarchicalDataTemplate>
 
-        <HierarchicalDataTemplate  x:Key="ObjectPropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
-            <StackPanel Orientation="Horizontal" Margin="1">
-                <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
-                <TextBlock Text=" "/>
-                <TextBlock Text="{}{ }" Foreground="#729fcf"/>
-            </StackPanel>
-        </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate  x:Key="ObjectPropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
+                <StackPanel Orientation="Horizontal" Margin="1">
+                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+                    <TextBlock Text=" "/>
+                    <TextBlock Text="{}{ }" Foreground="#729fcf"/>
+                </StackPanel>
+            </HierarchicalDataTemplate>
 
-        <DataTemplate x:Key="PrimitivePropertyTemplate" DataType="{x:Type jlinq:JProperty}" >
+            <DataTemplate x:Key="PrimitivePropertyTemplate" DataType="{x:Type jlinq:JProperty}" >
 
-            <StackPanel Orientation="Horizontal" Margin="1">
-                <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
-                <TextBlock Text=" : "/>
-                <TextBlock Text="  "/>
+                <StackPanel Orientation="Horizontal" Margin="1">
+                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+                    <TextBlock Text=" : "/>
+                    <TextBlock Text="  "/>
 
-                <TextBlock MouseLeftButtonDown="JValue_OnMouseLeftButtonDown" MaxWidth="420" 
+                    <TextBlock MouseLeftButtonDown="JValue_OnMouseLeftButtonDown" MaxWidth="420" 
                            TextWrapping="Wrap" Text="{Binding Path=Value, Converter={StaticResource JValueConverter}}" 
                            Foreground="{Binding Converter={StaticResource JPropertyTypeToColorConverter}}" />
-            </StackPanel>
-        </DataTemplate>
+                </StackPanel>
+            </DataTemplate>
 
-        <HierarchicalDataTemplate DataType="{x:Type jlinq:JObject}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
-            <StackPanel Orientation="Horizontal" Margin="1">
-                <TextBlock Text=" "/>
-                <TextBlock Text="{}{ }" Foreground="#729fcf"/>
-            </StackPanel>
-        </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type jlinq:JConstructor}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
-            <TextBlock Text="Constructor">
-            </TextBlock>
-        </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type jlinq:JRaw}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
-            <TextBlock Text="Raw">
-            </TextBlock>
-        </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type jlinq:JObject}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+                <StackPanel Orientation="Horizontal" Margin="1">
+                    <TextBlock Text=" "/>
+                    <TextBlock Text="{}{ }" Foreground="#729fcf"/>
+                </StackPanel>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type jlinq:JConstructor}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+                <TextBlock Text="Constructor">
+                </TextBlock>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type jlinq:JRaw}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+                <TextBlock Text="Raw">
+                </TextBlock>
+            </HierarchicalDataTemplate>
 
-        <templateSelectors:JPropertyDataTemplateSelector x:Key="JPropertyDataTemplateSelector" 
+            <templateSelectors:JPropertyDataTemplateSelector x:Key="JPropertyDataTemplateSelector" 
                                              ArrayPropertyTemplate="{StaticResource ArrayPropertyTemplate}"
                                              ObjectPropertyTemplate="{StaticResource ObjectPropertyTemplate}"
                                              PrimitivePropertyTemplate ="{StaticResource PrimitivePropertyTemplate}"/>
 
 
-        <DataTemplate DataType="{x:Type jlinq:JValue}">
-            <TextBlock MouseLeftButtonDown="JValue_OnMouseLeftButtonDown" Width="300" 
+            <DataTemplate DataType="{x:Type jlinq:JValue}">
+                <TextBlock MouseLeftButtonDown="JValue_OnMouseLeftButtonDown" Width="300" 
                            TextWrapping="Wrap" Text="{Binding Converter={StaticResource JValueConverter}}" 
                            Foreground="{Binding Converter={StaticResource JValueTypeToColorConverter}}" />
-        </DataTemplate>
+            </DataTemplate>
         </ResourceDictionary>
-        
+
 
     </UserControl.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <GroupBox Style="{StaticResource MaterialDesignCardGroupBox}"
+                        Background="{DynamicResource MahApps.Brushes.Accent4}"
+                        Margin="3" Padding="3">
 
-        <Border Grid.Row="0" CornerRadius="3" BorderBrush="{DynamicResource MahApps.Brushes.Accent}">
-            <Border.Style>
-                <Style TargetType="{x:Type Border}">
-                    
-                    <Setter Property="Visibility" Value="Visible"/>
-                    <Setter Property="BorderThickness" Value="1"/>
-                    
-                    <Style.Triggers>
-                        
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding HideButtons, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True"/>
-                                <Condition Binding="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" Value=""/>
-                            </MultiDataTrigger.Conditions>
-                            <MultiDataTrigger.Setters>
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                            </MultiDataTrigger.Setters>
-                        </MultiDataTrigger>
+        <GroupBox.Header>
+            <DockPanel>
+                <DockPanel.Style>
+                    <Style TargetType="{x:Type DockPanel}">
 
-                        <DataTrigger Binding="{Binding HideBorders, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
-                            <Setter Property="BorderThickness" Value="0"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
+                        <Setter Property="Visibility" Value="Visible"/>
 
-            <StackPanel Orientation="Horizontal">
-                <StackPanel VerticalAlignment="Center">
-                    <StackPanel.Style>
-                        <Style TargetType="{x:Type StackPanel}">
+                        <Style.Triggers>
+
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding HideButtons, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True"/>
+                                    <Condition Binding="{Binding ShowSaveButton, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="False"/>
+                                    <Condition Binding="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" Value=""/>
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DockPanel.Style>
+
+                <md:Card Background="{DynamicResource MahApps.Brushes.Control.Background}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Padding="2,1">
+                    <md:Card.Style>
+                        <Style TargetType="{x:Type md:Card}">
                             <Setter Property="Visibility" Value="Visible"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="">
@@ -167,58 +162,14 @@
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
-                    </StackPanel.Style>
+                    </md:Card.Style>
 
-                    <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="10,6" />
-
-                </StackPanel>
+                    <TextBlock d:Text="This is a Title" Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" FontSize="{DynamicResource MahApps.Font.Size.ContextMenu}"/>
+                </md:Card>
                 
-                <StackPanel Orientation="Horizontal">
-                    <StackPanel.Style>
-                        <Style TargetType="{x:Type StackPanel}">
-                            <Setter Property="Visibility" Value="Visible"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding HideButtons, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </StackPanel.Style>
-
-                    <Button Click="ExpandAll" ToolTip="Expand All" Margin="3" Width="20" Height="20" BorderThickness="0">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFloatingActionButton}">
-                                <Setter Property="IsEnabled" Value="True"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                        
-                        <IconPacks:PackIconMaterial Kind="ExpandAll" Height="12" Width="12"/>
-                    </Button>
-
-                    <Button Click="CollapseAll" ToolTip="Collapse All" Margin="3" Width="20" Height="20" BorderThickness="0">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFloatingActionButton}">
-                                <Setter Property="IsEnabled" Value="True"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                        
-                        <IconPacks:PackIconMaterial Kind="CollapseAll" Height="12" Width="12"/>
-                    </Button>
-                </StackPanel>
-
-                <StackPanel>
-                    <StackPanel.Style>
-                        <Style TargetType="{x:Type StackPanel}">
+                <DockPanel HorizontalAlignment="Left" Margin="6,0,0,0">
+                    <DockPanel.Style>
+                        <Style TargetType="{x:Type DockPanel}">
                             <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding ShowSaveButton, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
@@ -226,9 +177,9 @@
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
-                    </StackPanel.Style>
+                    </DockPanel.Style>
 
-                    <Button x:Name="btnSaveJSON" ToolTip="Save JSON" Margin="3" BorderThickness="0" Width="20" Height="20" Click="btnSaveJSON_Click">
+                    <Button x:Name="btnSaveJSON" Click="btnSaveJSON_Click" ToolTip="Save JSON" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Left">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFloatingActionButton}">
                                 <Setter Property="IsEnabled" Value="True"/>
@@ -242,24 +193,57 @@
 
                         <IconPacks:PackIconMaterial Kind="ContentSave" Height="12" Width="12"/>
                     </Button>
-                </StackPanel>
+                </DockPanel>
+                
+                <DockPanel>
+                    <DockPanel.Style>
+                        <Style TargetType="{x:Type DockPanel}">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HideButtons, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DockPanel.Style>
 
-            </StackPanel>
+                    <Button Click="ExpandAll" ToolTip="Expand All" Width="20" Height="20" Margin="6,0,3,0" BorderThickness="0" HorizontalAlignment="Left">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFloatingActionButton}">
+                                <Setter Property="IsEnabled" Value="True"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
 
-        </Border>
+                        <IconPacks:PackIconMaterial Kind="ExpandAll" Height="12" Width="12"/>
+                    </Button>
 
-        <Border Grid.Row="1" Padding="2" CornerRadius="3" BorderBrush="{DynamicResource MahApps.Brushes.Accent}">
-            <Border.Style>
-                <Style TargetType="Border">
-                    <Setter Property="BorderThickness" Value="1"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding HideBorders, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
-                            <Setter Property="BorderThickness" Value="0"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            
+                    <Button Click="CollapseAll" ToolTip="Collapse All" Width="20" Height="20" Margin="3,0" BorderThickness="0" HorizontalAlignment="Left">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFloatingActionButton}">
+                                <Setter Property="IsEnabled" Value="True"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+
+                        <IconPacks:PackIconMaterial Kind="CollapseAll" Height="12" Width="12"/>
+                    </Button>
+
+                </DockPanel>
+
+
+            </DockPanel>
+        </GroupBox.Header>
+
+        <md:Card Background="{DynamicResource MahApps.Brushes.Control.Background}" Padding="2" Margin="3">
             <TreeView Margin="3" Name="JsonTreeView" IsTextSearchEnabled="True" BorderThickness="0"
                 ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}">
                 <TreeView.ItemContainerStyle>
@@ -268,6 +252,7 @@
                     </Style>
                 </TreeView.ItemContainerStyle>
             </TreeView>
-        </Border>
-    </Grid>
+        </md:Card>
+    </GroupBox>
+
 </UserControl>

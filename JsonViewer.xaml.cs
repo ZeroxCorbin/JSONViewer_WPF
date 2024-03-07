@@ -113,23 +113,6 @@ namespace JSONViewer_WPF
             set => SetValue(ShowSaveButtonProperty, value);
         }
 
-        public static readonly DependencyProperty HideBordersProperty =
-            DependencyProperty.Register(
-            name: "HideBorders",
-            propertyType: typeof(bool),
-            ownerType: typeof(JsonViewer),
-            typeMetadata: new FrameworkPropertyMetadata(
-                defaultValue: false,
-                flags: FrameworkPropertyMetadataOptions.AffectsRender)
-            );
-
-        public bool HideBorders
-        {
-            get => (bool)GetValue(HideBordersProperty);
-            set => SetValue(HideBordersProperty, value);
-        }
-
-
         public JsonViewer()
         {
             InitializeComponent();
@@ -343,7 +326,7 @@ namespace JSONViewer_WPF
         private void btnSaveJSON_Click(object sender, RoutedEventArgs e)
         {
             string path;
-            if ((path = GetSaveFilePath("", "JSON|*.json", "Save JSON")) == "")
+            if ((path = GetSaveFilePath(Title, "JSON|*.json", "Save JSON")) == "")
                 return;
 
             try
