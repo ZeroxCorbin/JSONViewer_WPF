@@ -51,9 +51,6 @@ namespace JSONViewer_WPF
             );
         private static void JSONProperty_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue == null)
-                return;
-
             var control = (JsonViewer)d;
             if (e.NewValue is string str)
                 control.Load(str);
@@ -168,7 +165,11 @@ namespace JSONViewer_WPF
         public void Load(string json)
         {
             if (string.IsNullOrEmpty(json))
+            {
+                JsonTreeView.ItemsSource = null;
                 return;
+            }
+                
 
             try
             {
@@ -183,7 +184,11 @@ namespace JSONViewer_WPF
         public void Load(object obj)
         {
             if (obj == null)
-                return;
+            {
+                JsonTreeView.ItemsSource = null;
+return;
+            }
+                
 
             try
             {
