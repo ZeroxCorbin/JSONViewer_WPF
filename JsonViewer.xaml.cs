@@ -169,7 +169,7 @@ namespace JSONViewer_WPF
                 JsonTreeView.ItemsSource = null;
                 return;
             }
-                
+
 
             try
             {
@@ -186,13 +186,16 @@ namespace JSONViewer_WPF
             if (obj == null)
             {
                 JsonTreeView.ItemsSource = null;
-return;
+                return;
             }
-                
+
 
             try
             {
-                JsonTreeView.ItemsSource = JsonConvert.DeserializeObject<JToken>(JsonConvert.SerializeObject(obj));
+                JsonTreeView.ItemsSource = JsonConvert.DeserializeObject<JToken>(JsonConvert.SerializeObject(obj, Formatting.None, new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                }));
                 //JsonTreeView.ItemsSource = JToken.FromObject(obj);
                 ToggleFirstItem(true);
             }
