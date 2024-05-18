@@ -45,7 +45,7 @@ namespace JSONViewer_WPF
               propertyType: typeof(object),
               ownerType: typeof(JsonViewer),
               typeMetadata: new FrameworkPropertyMetadata(
-                  defaultValue: "",
+                  defaultValue: null,
                   flags: FrameworkPropertyMetadataOptions.AffectsRender,
                   propertyChangedCallback: new PropertyChangedCallback(JSONProperty_OnChanged))
             );
@@ -57,7 +57,7 @@ namespace JSONViewer_WPF
             else
                 control.Load(e.NewValue);
         }
-        public string JSON
+        public object JSON
         {
             get => (string)GetValue(JSONProperty);
             set => SetValue(JSONProperty, value);
@@ -162,7 +162,7 @@ namespace JSONViewer_WPF
         }
 
         bool once = false;
-        public void Load(string json)
+        private void Load(string json)
         {
             if (string.IsNullOrEmpty(json))
             {
@@ -181,7 +181,7 @@ namespace JSONViewer_WPF
             }
         }
 
-        public void Load(object obj)
+        private void Load(object obj)
         {
             if (obj == null)
             {
@@ -339,7 +339,10 @@ namespace JSONViewer_WPF
 
             try
             {
-                System.IO.File.WriteAllText(path, JSON);
+                if(JSON is string)
+                    System.IO.File.WriteAllText(path, JSON as string);
+                else
+                    System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(JSON, Formatting.Indented));
             }
             catch { }
 
