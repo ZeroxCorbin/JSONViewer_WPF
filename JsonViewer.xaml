@@ -126,11 +126,12 @@
     </UserControl.Resources>
 
     <GroupBox Style="{StaticResource MaterialDesignCardGroupBox}"
-                        Background="{DynamicResource MahApps.Brushes.Accent4}"
+            md:ColorZoneAssist.Background="{DynamicResource MahApps.Brushes.Accent4}"
+            md:ColorZoneAssist.Mode="Custom"
                         Margin="3" Padding="3">
 
         <GroupBox.Header>
-            <DockPanel>
+            <DockPanel Margin="-5">
                 <DockPanel.Style>
                     <Style TargetType="{x:Type DockPanel}">
 
@@ -166,7 +167,7 @@
 
                     <TextBlock d:Text="This is a Title" Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" FontSize="{DynamicResource MahApps.Font.Size.ContextMenu}"/>
                 </md:Card>
-                
+
                 <DockPanel HorizontalAlignment="Left" Margin="6,0,0,0">
                     <DockPanel.Style>
                         <Style TargetType="{x:Type DockPanel}">
@@ -194,7 +195,7 @@
                         <IconPacks:PackIconMaterial Kind="ContentSave" Height="12" Width="12"/>
                     </Button>
                 </DockPanel>
-                
+
                 <DockPanel>
                     <DockPanel.Style>
                         <Style TargetType="{x:Type DockPanel}">
