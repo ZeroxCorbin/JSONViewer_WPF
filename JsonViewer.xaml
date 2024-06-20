@@ -4,7 +4,7 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-            xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+            xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
             xmlns:jlinq="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json"
             xmlns:templateSelectors="clr-namespace:JSONViewer_WPF.TemplateSelectors"
             xmlns:valueConverters="clr-namespace:JSONViewer_WPF.ValueConverters"
@@ -30,6 +30,16 @@
 
             </ResourceDictionary.MergedDictionaries>
 
+            <Style x:Key="GroupHeaderCirlceButton" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Circle}">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Width" Value="22"/>
+                <Setter Property="Height" Value="22"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Margin" Value="3,0"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+            </Style>
+            
             <SolidColorBrush x:Key="HighlightBrush" Color="{DynamicResource Primary700}"/>
             <SolidColorBrush x:Key="AccentBaseColorBrush" Color="{DynamicResource Primary600}" />
             <SolidColorBrush x:Key="AccentColorBrush" Color="{DynamicResource Primary500}"/>
@@ -153,7 +163,7 @@
                     </Style>
                 </DockPanel.Style>
 
-                <md:Card Background="{DynamicResource MahApps.Brushes.Control.Background}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Padding="2,1">
+                <md:Card Background="{DynamicResource MahApps.Brushes.Control.Background}" HorizontalAlignment="Left" Padding="2,1">
                     <md:Card.Style>
                         <Style TargetType="{x:Type md:Card}">
                             <Setter Property="Visibility" Value="Visible"/>
@@ -180,9 +190,9 @@
                         </Style>
                     </DockPanel.Style>
 
-                    <Button x:Name="btnSaveJSON" Click="btnSaveJSON_Click" ToolTip="Save JSON" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Left">
+                    <Button x:Name="btnSaveJSON" Click="btnSaveJSON_Click" ToolTip="Save JSON">
                         <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFloatingActionButton}">
+                            <Style TargetType="Button" BasedOn="{StaticResource GroupHeaderCirlceButton}">
                                 <Setter Property="IsEnabled" Value="True"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
@@ -192,7 +202,7 @@
                             </Style>
                         </Button.Style>
 
-                        <IconPacks:PackIconMaterial Kind="ContentSave" Height="12" Width="12"/>
+                        <iconPacks:PackIconMaterial Kind="ContentSave" Margin="-1,0,0,0" Height="14" Width="14"/>
                     </Button>
                 </DockPanel>
 
@@ -208,9 +218,9 @@
                         </Style>
                     </DockPanel.Style>
 
-                    <Button Click="ExpandAll" ToolTip="Expand All" Width="20" Height="20" Margin="6,0,3,0" BorderThickness="0" HorizontalAlignment="Left">
+                    <Button Click="ExpandAll" ToolTip="Expand All" Margin="6,0,3,0">
                         <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFloatingActionButton}">
+                            <Style TargetType="Button" BasedOn="{StaticResource GroupHeaderCirlceButton}">
                                 <Setter Property="IsEnabled" Value="True"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
@@ -220,12 +230,12 @@
                             </Style>
                         </Button.Style>
 
-                        <IconPacks:PackIconMaterial Kind="ExpandAll" Height="12" Width="12"/>
+                        <iconPacks:PackIconMaterial Kind="ExpandAll" Height="14" Width="14"/>
                     </Button>
 
-                    <Button Click="CollapseAll" ToolTip="Collapse All" Width="20" Height="20" Margin="3,0" BorderThickness="0" HorizontalAlignment="Left">
+                    <Button Click="CollapseAll" ToolTip="Collapse All">
                         <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFloatingActionButton}">
+                            <Style TargetType="Button" BasedOn="{StaticResource GroupHeaderCirlceButton}">
                                 <Setter Property="IsEnabled" Value="True"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
@@ -235,7 +245,7 @@
                             </Style>
                         </Button.Style>
 
-                        <IconPacks:PackIconMaterial Kind="CollapseAll" Height="12" Width="12"/>
+                        <iconPacks:PackIconMaterial Kind="CollapseAll" Height="14" Width="14"/>
                     </Button>
 
                 </DockPanel>
