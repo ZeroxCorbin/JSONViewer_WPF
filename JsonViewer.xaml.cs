@@ -290,6 +290,9 @@ namespace JSONViewer_WPF
             var itemGen = parentContainer.ItemContainerGenerator;
             if (itemGen.Status == Generated)
             {
+                if(items.Count == 0)
+                    return;
+
                 var tvi = itemGen.ContainerFromItem(items[0]) as TreeViewItem;
                 tvi.IsExpanded = isExpanded;
 
