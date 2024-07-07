@@ -161,7 +161,6 @@ namespace JSONViewer_WPF
             return false;
         }
 
-        bool once = false;
         private void Load(string json)
         {
             if (string.IsNullOrEmpty(json))
