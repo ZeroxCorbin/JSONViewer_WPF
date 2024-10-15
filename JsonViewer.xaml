@@ -163,21 +163,8 @@
                     </Style>
                 </DockPanel.Style>
 
-                <md:Card Background="{DynamicResource MahApps.Brushes.Control.Background}" HorizontalAlignment="Left" Padding="2,1">
-                    <md:Card.Style>
-                        <Style TargetType="{x:Type md:Card}">
-                            <Setter Property="Visibility" Value="Visible"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </md:Card.Style>
-
-                    <TextBlock d:Text="This is a Title" Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" FontSize="{DynamicResource MahApps.Font.Size.ContextMenu}"/>
-                </md:Card>
-
+               <TextBlock d:Text="This is a Title" Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource MahApps.Styles.TextBlock.HamburgerMenuHeader}"/>
+   
                 <DockPanel HorizontalAlignment="Left" Margin="6,0,0,0">
                     <DockPanel.Style>
                         <Style TargetType="{x:Type DockPanel}">
@@ -192,7 +179,7 @@
 
                     <Button x:Name="btnSaveJSON" Click="btnSaveJSON_Click" ToolTip="Save JSON">
                         <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource GroupHeaderCirlceButton}">
+                            <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Hamburger}">
                                 <Setter Property="IsEnabled" Value="True"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
@@ -202,7 +189,7 @@
                             </Style>
                         </Button.Style>
 
-                        <iconPacks:PackIconMaterial Kind="ContentSave" Margin="-1,0,0,0" Height="14" Width="14"/>
+                        <iconPacks:PackIconMaterial Kind="ContentSave" Height="20" Width="20"/>
                     </Button>
                 </DockPanel>
 
@@ -220,7 +207,7 @@
 
                     <Button Click="ExpandAll" ToolTip="Expand All" Margin="6,0,3,0">
                         <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource GroupHeaderCirlceButton}">
+                            <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Hamburger}">
                                 <Setter Property="IsEnabled" Value="True"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
@@ -230,12 +217,12 @@
                             </Style>
                         </Button.Style>
 
-                        <iconPacks:PackIconMaterial Kind="ExpandAll" Height="14" Width="14"/>
+                        <iconPacks:PackIconMaterial Kind="ExpandAll" Height="20" Width="20"/>
                     </Button>
 
-                    <Button Click="CollapseAll" ToolTip="Collapse All">
+                    <Button Click="CollapseAll" ToolTip="Collapse All" HorizontalAlignment="Left">
                         <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource GroupHeaderCirlceButton}">
+                            <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Hamburger}">
                                 <Setter Property="IsEnabled" Value="True"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
@@ -245,7 +232,7 @@
                             </Style>
                         </Button.Style>
 
-                        <iconPacks:PackIconMaterial Kind="CollapseAll" Height="14" Width="14"/>
+                        <iconPacks:PackIconMaterial Kind="CollapseAll" Height="20" Width="20"/>
                     </Button>
 
                 </DockPanel>
