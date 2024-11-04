@@ -18,9 +18,19 @@ namespace JSONViewer_WPF.ValueConverters
                         return "\"" + jval.Value + "\"";
                     case JTokenType.Null:
                         return "Null";
+                    case JTokenType.Bytes:
+                        return (byte[])jval;
+                    case JTokenType.Integer:
+                        return jval.Value<int>();
                 }
             }
 
+            var jtok = value as JProperty;
+            if(jtok != null)
+            {
+                if (jtok.Value.Type == JTokenType.Bytes)
+                    return (byte[])jtok.Value;
+            }
             return value;
         }
 

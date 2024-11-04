@@ -191,10 +191,7 @@ namespace JSONViewer_WPF
 
             try
             {
-                JsonTreeView.ItemsSource = JsonConvert.DeserializeObject<JToken>(JsonConvert.SerializeObject(obj, Formatting.None, new JsonSerializerSettings
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                }));
+                JsonTreeView.ItemsSource = JObject.FromObject(obj);
                 //JsonTreeView.ItemsSource = JToken.FromObject(obj);
                 ToggleFirstItem(true);
             }

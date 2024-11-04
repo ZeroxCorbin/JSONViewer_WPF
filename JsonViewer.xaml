@@ -3,10 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hex="clr-namespace:HexView.Wpf;assembly=HexView.Wpf"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:jlinq="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:templateSelectors="clr-namespace:JSONViewer_WPF.TemplateSelectors"
     xmlns:valueConverters="clr-namespace:JSONViewer_WPF.ValueConverters"
     d:DesignHeight="300"
@@ -15,28 +15,7 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <!--  MahApps  -->
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Dark.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
-
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Grey.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Secondary/MaterialDesignColor.DeepPurple.xaml" />
-
-                <!--  Material Design: MahApps Compatibility  -->
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Fonts.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Flyout.xaml" />
-
-            </ResourceDictionary.MergedDictionaries>
-
-            <Style
-                x:Key="GroupHeaderCirlceButton"
-                BasedOn="{StaticResource MahApps.Styles.Button.Circle}"
-                TargetType="Button">
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
+            <Style x:Key="GroupHeaderCirlceButton" TargetType="Button">
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Width" Value="22" />
                 <Setter Property="Height" Value="22" />
@@ -44,29 +23,6 @@
                 <Setter Property="Margin" Value="3,0" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
             </Style>
-
-            <SolidColorBrush x:Key="HighlightBrush" Color="{DynamicResource Primary700}" />
-            <SolidColorBrush x:Key="AccentBaseColorBrush" Color="{DynamicResource Primary600}" />
-            <SolidColorBrush x:Key="AccentColorBrush" Color="{DynamicResource Primary500}" />
-            <SolidColorBrush x:Key="AccentColorBrush2" Color="{DynamicResource Primary400}" />
-            <SolidColorBrush x:Key="AccentColorBrush3" Color="{DynamicResource Primary300}" />
-            <SolidColorBrush x:Key="AccentColorBrush4" Color="{DynamicResource Primary200}" />
-            <SolidColorBrush x:Key="WindowTitleColorBrush" Color="{DynamicResource Primary700}" />
-            <SolidColorBrush x:Key="AccentSelectedColorBrush" Color="{DynamicResource Primary500Foreground}" />
-            <LinearGradientBrush x:Key="ProgressBrush" StartPoint="1.002,0.5" EndPoint="0.001,0.5">
-                <GradientStop Offset="0" Color="{DynamicResource Primary700}" />
-                <GradientStop Offset="1" Color="{DynamicResource Primary300}" />
-            </LinearGradientBrush>
-            <SolidColorBrush x:Key="CheckmarkFill" Color="{DynamicResource Primary500}" />
-            <SolidColorBrush x:Key="RightArrowFill" Color="{DynamicResource Primary500}" />
-            <SolidColorBrush x:Key="IdealForegroundColorBrush" Color="{DynamicResource Primary500Foreground}" />
-            <SolidColorBrush
-                x:Key="IdealForegroundDisabledBrush"
-                Opacity="0.4"
-                Color="{DynamicResource Primary500}" />
-            <SolidColorBrush x:Key="MahApps.Metro.Brushes.ToggleSwitchButton.OnSwitchBrush.Win10" Color="{DynamicResource Primary500}" />
-            <SolidColorBrush x:Key="MahApps.Metro.Brushes.ToggleSwitchButton.OnSwitchMouseOverBrush.Win10" Color="{DynamicResource Primary400}" />
-            <SolidColorBrush x:Key="MahApps.Metro.Brushes.ToggleSwitchButton.ThumbIndicatorCheckedBrush.Win10" Color="{DynamicResource Primary500Foreground}" />
 
             <valueConverters:MethodToValueConverter x:Key="MethodToValueConverter" />
             <valueConverters:ComplexPropertyMethodToValueConverter x:Key="ComplexPropertyMethodToValueConverter" />
@@ -82,18 +38,19 @@
                         Margin="0,0,5,0"
                         Padding="3,0,3,1"
                         Background="#a40000"
-                        Foreground="WhiteSmoke"
+                        Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}"
                         Opacity="0.4"
                         Text="array" />
                     <TextBlock Foreground="#a40000" Text="{Binding Converter={StaticResource JArrayLengthConverter}}" />
                 </StackPanel>
             </HierarchicalDataTemplate>
+
             <HierarchicalDataTemplate
                 x:Key="ArrayPropertyTemplate"
                 DataType="{x:Type jlinq:JProperty}"
                 ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
                 <StackPanel Margin="1" Orientation="Horizontal">
-                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                     <TextBlock Text=" " />
                     <!--<TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>-->
                     <TextBlock Foreground="#a40000" Text="{Binding Converter={StaticResource JArrayLengthConverter}}" />
@@ -105,18 +62,39 @@
                 DataType="{x:Type jlinq:JProperty}"
                 ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
                 <StackPanel Margin="1" Orientation="Horizontal">
-                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                     <TextBlock Text=" " />
                     <TextBlock Foreground="#729fcf" Text="{}{ }" />
+                </StackPanel>
+            </HierarchicalDataTemplate>
+
+            <HierarchicalDataTemplate
+                x:Key="HexPropertyTemplate"
+                DataType="{x:Type jlinq:JProperty}"
+                ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
+                <StackPanel Margin="1" Orientation="Horizontal">
+                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                    <TextBlock Text=" " />
+
+                    <ScrollViewer Height="100">
+                        <hex:HexViewer
+                            Width="200"
+                            AddressFormat="Address16"
+                            ArrayDataSource="{Binding Value, Converter={StaticResource JValueConverter}}"
+                            Columns="{Binding RelativeSource={RelativeSource Self}, Path=MaxVisibleColumns}"
+                            DataWidth="1"
+                            ShowAddress="False" />
+                    </ScrollViewer>
+
                 </StackPanel>
             </HierarchicalDataTemplate>
 
             <DataTemplate x:Key="PrimitivePropertyTemplate" DataType="{x:Type jlinq:JProperty}">
 
                 <StackPanel Margin="1" Orientation="Horizontal">
-                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
-                    <TextBlock Text=" : " />
-                    <TextBlock Text="  " />
+                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}" Text="{Binding Path=Name, Mode=OneWay}" />
+                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}" Text=" : " />
+                    <TextBlock Text=" " />
 
                     <TextBlock
                         MaxWidth="420"
@@ -133,9 +111,11 @@
                     <TextBlock Foreground="#729fcf" Text="{}{ }" />
                 </StackPanel>
             </HierarchicalDataTemplate>
+
             <HierarchicalDataTemplate DataType="{x:Type jlinq:JConstructor}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
                 <TextBlock Text="Constructor" />
             </HierarchicalDataTemplate>
+
             <HierarchicalDataTemplate DataType="{x:Type jlinq:JRaw}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
                 <TextBlock Text="Raw" />
             </HierarchicalDataTemplate>
@@ -143,6 +123,7 @@
             <templateSelectors:JPropertyDataTemplateSelector
                 x:Key="JPropertyDataTemplateSelector"
                 ArrayPropertyTemplate="{StaticResource ArrayPropertyTemplate}"
+                HexPropertyTemplate="{StaticResource HexPropertyTemplate}"
                 ObjectPropertyTemplate="{StaticResource ObjectPropertyTemplate}"
                 PrimitivePropertyTemplate="{StaticResource PrimitivePropertyTemplate}" />
 
@@ -160,152 +141,141 @@
 
     </UserControl.Resources>
 
-    <GroupBox
-        Margin="3"
-        Padding="3"
-        md:ColorZoneAssist.Background="{DynamicResource MahApps.Brushes.Accent4}"
-        md:ColorZoneAssist.Mode="Custom"
-        Style="{StaticResource MaterialDesignCardGroupBox}">
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top">
+            <DockPanel.Style>
+                <Style TargetType="{x:Type DockPanel}">
 
-        <GroupBox.Header>
-            <DockPanel Margin="-5">
+                    <Setter Property="Visibility" Value="Visible" />
+
+                    <Style.Triggers>
+
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding HideButtons, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True" />
+                                <Condition Binding="{Binding ShowSaveButton, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="False" />
+                                <Condition Binding="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="" />
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DockPanel.Style>
+
+            <TextBlock d:Text="This is a Title" Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+
+            <DockPanel Margin="6,0,0,0" HorizontalAlignment="Left">
                 <DockPanel.Style>
                     <Style TargetType="{x:Type DockPanel}">
-
-                        <Setter Property="Visibility" Value="Visible" />
-
+                        <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-
-                            <MultiDataTrigger>
-                                <MultiDataTrigger.Conditions>
-                                    <Condition Binding="{Binding HideButtons, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True" />
-                                    <Condition Binding="{Binding ShowSaveButton, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="False" />
-                                    <Condition Binding="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="" />
-                                </MultiDataTrigger.Conditions>
-                                <MultiDataTrigger.Setters>
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </MultiDataTrigger.Setters>
-                            </MultiDataTrigger>
+                            <DataTrigger Binding="{Binding ShowSaveButton, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </DockPanel.Style>
 
-                <TextBlock
-                    d:Text="This is a Title"
-                    Style="{StaticResource MahApps.Styles.TextBlock.HamburgerMenuHeader}"
-                    Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" />
-
-                <DockPanel Margin="6,0,0,0" HorizontalAlignment="Left">
-                    <DockPanel.Style>
-                        <Style TargetType="{x:Type DockPanel}">
-                            <Setter Property="Visibility" Value="Collapsed" />
+                <Button
+                    x:Name="btnSaveJSON"
+                    Click="btnSaveJSON_Click"
+                    ToolTip="Save JSON">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="IsEnabled" Value="True" />
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding ShowSaveButton, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
-                                    <Setter Property="Visibility" Value="Visible" />
+                                <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
+                                    <Setter Property="IsEnabled" Value="False" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
-                    </DockPanel.Style>
+                    </Button.Style>
 
-                    <Button
-                        x:Name="btnSaveJSON"
-                        Click="btnSaveJSON_Click"
-                        ToolTip="Save JSON">
-                        <Button.Style>
-                            <Style BasedOn="{StaticResource MahApps.Styles.Button.Hamburger}" TargetType="Button">
-                                <Setter Property="IsEnabled" Value="True" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
-                                        <Setter Property="IsEnabled" Value="False" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
+                    <iconPacks:PackIconMaterial
+                        Width="20"
+                        Height="20"
+                        Kind="ContentSave" />
+                </Button>
+            </DockPanel>
 
-                        <iconPacks:PackIconMaterial
-                            Width="20"
-                            Height="20"
-                            Kind="ContentSave" />
-                    </Button>
-                </DockPanel>
+            <DockPanel>
+                <DockPanel.Style>
+                    <Style TargetType="{x:Type DockPanel}">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding HideButtons, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DockPanel.Style>
 
-                <DockPanel>
-                    <DockPanel.Style>
-                        <Style TargetType="{x:Type DockPanel}">
-                            <Setter Property="Visibility" Value="Visible" />
+                <Button
+                    Margin="6,0,3,0"
+                    Click="ExpandAll"
+                    ToolTip="Expand All">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="IsEnabled" Value="True" />
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding HideButtons, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
-                                    <Setter Property="Visibility" Value="Collapsed" />
+                                <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
+                                    <Setter Property="IsEnabled" Value="False" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
-                    </DockPanel.Style>
+                    </Button.Style>
 
-                    <Button
-                        Margin="6,0,3,0"
-                        Click="ExpandAll"
-                        ToolTip="Expand All">
-                        <Button.Style>
-                            <Style BasedOn="{StaticResource MahApps.Styles.Button.Hamburger}" TargetType="Button">
-                                <Setter Property="IsEnabled" Value="True" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
-                                        <Setter Property="IsEnabled" Value="False" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
+                    <iconPacks:PackIconMaterial
+                        Width="20"
+                        Height="20"
+                        Kind="ExpandAll" />
+                </Button>
 
-                        <iconPacks:PackIconMaterial
-                            Width="20"
-                            Height="20"
-                            Kind="ExpandAll" />
-                    </Button>
+                <Button
+                    HorizontalAlignment="Left"
+                    Click="CollapseAll"
+                    ToolTip="Collapse All">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="IsEnabled" Value="True" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
 
-                    <Button
-                        HorizontalAlignment="Left"
-                        Click="CollapseAll"
-                        ToolTip="Collapse All">
-                        <Button.Style>
-                            <Style BasedOn="{StaticResource MahApps.Styles.Button.Hamburger}" TargetType="Button">
-                                <Setter Property="IsEnabled" Value="True" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
-                                        <Setter Property="IsEnabled" Value="False" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-
-                        <iconPacks:PackIconMaterial
-                            Width="20"
-                            Height="20"
-                            Kind="CollapseAll" />
-                    </Button>
-
-                </DockPanel>
-
+                    <iconPacks:PackIconMaterial
+                        Width="20"
+                        Height="20"
+                        Kind="CollapseAll" />
+                </Button>
 
             </DockPanel>
-        </GroupBox.Header>
 
-        <md:Card
+
+        </DockPanel>
+
+        <TreeView
+            Name="JsonTreeView"
             Margin="3"
-            Padding="2"
-            Background="{DynamicResource MahApps.Brushes.Control.Background}">
-            <TreeView
-                Name="JsonTreeView"
-                Margin="3"
-                BorderThickness="0"
-                IsTextSearchEnabled="True"
-                ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}">
-                <TreeView.ItemContainerStyle>
-                    <Style TargetType="{x:Type TreeViewItem}">
-                        <!--<Setter Property="IsExpanded" Value="True" />-->
-                    </Style>
-                </TreeView.ItemContainerStyle>
-            </TreeView>
-        </md:Card>
-    </GroupBox>
+            Background="{Binding Background, RelativeSource={RelativeSource AncestorType=UserControl}}"
+            BorderThickness="0"
+            Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}"
+            IsTextSearchEnabled="True"
+            ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <!--<Setter Property="IsExpanded" Value="True" />-->
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
+
+    </DockPanel>
+
+
 
 </UserControl>
