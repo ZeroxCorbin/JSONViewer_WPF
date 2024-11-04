@@ -50,7 +50,7 @@
                 DataType="{x:Type jlinq:JProperty}"
                 ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
                 <StackPanel Margin="1" Orientation="Horizontal">
-                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}" Text="{Binding Path=Name, Mode=OneWay}" />
                     <TextBlock Text=" " />
                     <!--<TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>-->
                     <TextBlock Foreground="#a40000" Text="{Binding Converter={StaticResource JArrayLengthConverter}}" />
@@ -62,7 +62,7 @@
                 DataType="{x:Type jlinq:JProperty}"
                 ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
                 <StackPanel Margin="1" Orientation="Horizontal">
-                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}" Text="{Binding Path=Name, Mode=OneWay}" />
                     <TextBlock Text=" " />
                     <TextBlock Foreground="#729fcf" Text="{}{ }" />
                 </StackPanel>
@@ -73,7 +73,7 @@
                 DataType="{x:Type jlinq:JProperty}"
                 ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
                 <StackPanel Margin="1" Orientation="Horizontal">
-                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}" Text="{Binding Path=Name, Mode=OneWay}" />
                     <TextBlock Text=" " />
 
                     <ScrollViewer Height="100">
