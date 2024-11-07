@@ -68,9 +68,7 @@
                 </StackPanel>
             </HierarchicalDataTemplate>
 
-            <HierarchicalDataTemplate
-                x:Key="HexPropertyTemplate"
-                DataType="{x:Type jlinq:JProperty}">
+            <HierarchicalDataTemplate x:Key="HexPropertyTemplate" DataType="{x:Type jlinq:JProperty}">
                 <StackPanel Margin="1" Orientation="Horizontal">
                     <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}" Text="{Binding Path=Name, Mode=OneWay}" />
                     <TextBlock Text=" " />
