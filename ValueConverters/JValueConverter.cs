@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Numerics;
 using System.Windows.Data;
 using Newtonsoft.Json.Linq;
 
@@ -21,7 +22,7 @@ namespace JSONViewer_WPF.ValueConverters
                     case JTokenType.Bytes:
                         return (byte[])jval;
                     case JTokenType.Integer:
-                        return jval.Value<int>();
+                        return jval.Value<Int64>();
                 }
             }
 
