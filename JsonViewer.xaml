@@ -258,6 +258,7 @@
 
         <TreeView
             Name="JsonTreeView"
+            Width="260"
             Margin="3"
             Background="{Binding Background, RelativeSource={RelativeSource AncestorType=UserControl}}"
             BorderThickness="0"
