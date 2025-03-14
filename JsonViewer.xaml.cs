@@ -8,6 +8,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Threading;
 using JSONViewer_WPF.JsonHelpers;
+using Logging.lib;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -59,7 +60,7 @@ namespace JSONViewer_WPF
         }
         public object JSON
         {
-            get => (string)GetValue(JSONProperty);
+            get => GetValue(JSONProperty);
             set => SetValue(JSONProperty, value);
         }
 
@@ -338,12 +339,15 @@ namespace JSONViewer_WPF
 
             try
             {
-                if(JSON is string)
-                    System.IO.File.WriteAllText(path, JSON as string);
+                if(JSON is string s)
+                    System.IO.File.WriteAllText(path, s);
                 else
                     System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(JSON, Formatting.Indented));
             }
-            catch { }
+            catch(Exception ex)
+            {
+                Logger.LogError(ex);
+            }
 
         }
         private string GetSaveFilePath(string fileName, string filter, string title)

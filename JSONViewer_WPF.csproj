@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LibWpfHexView\HexView.Wpf\HexView.Wpf.csproj" />
+    <ProjectReference Include="..\Logging.lib\Logging.lib.csproj" />
   </ItemGroup>
 
 </Project>
