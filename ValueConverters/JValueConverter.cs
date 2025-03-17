@@ -22,7 +22,7 @@ namespace JSONViewer_WPF.ValueConverters
                     case JTokenType.Bytes:
                         return (byte[])jval;
                     case JTokenType.Integer:
-                        return jval.Value<Int64>();
+                        return jval.Value<BigInteger>();
                 }
             }
 
