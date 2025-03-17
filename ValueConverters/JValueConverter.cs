@@ -10,8 +10,7 @@ namespace JSONViewer_WPF.ValueConverters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var jval = value as JValue;
-            if (jval != null)
+            if (value is JValue jval && jval.Value != null)
             {
                 switch (jval.Type)
                 {
@@ -20,17 +19,17 @@ namespace JSONViewer_WPF.ValueConverters
                     case JTokenType.Null:
                         return "Null";
                     case JTokenType.Bytes:
-                        return (byte[])jval;
-                    case JTokenType.Integer:
-                        return jval.Value<BigInteger>();
+                        return (byte[])jval.Value;
+                    default:
+                        return jval.Value;
+
                 }
             }
 
-            var jtok = value as JProperty;
-            if(jtok != null)
+            if(value is JProperty jtok)
             {
-                if (jtok.Value.Type == JTokenType.Bytes)
-                    return (byte[])jtok.Value;
+                if (jtok.Value != null && jtok.Value.Type == JTokenType.Bytes)
+                    return (byte[])jtok.Value.Values<byte>();
             }
             return value;
         }
