@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using JSONViewer_WPF.JsonHelpers;
 using Logging.lib;
@@ -111,9 +112,94 @@ namespace JSONViewer_WPF
             set => SetValue(ShowSaveButtonProperty, value);
         }
 
+        public static readonly DependencyProperty MaxDataLengthProperty =
+            DependencyProperty.Register(
+            name: "MaxDataLength",
+            propertyType: typeof(int),
+            ownerType: typeof(JsonViewer),
+            typeMetadata: new FrameworkPropertyMetadata(
+                defaultValue: 1000,
+                flags: FrameworkPropertyMetadataOptions.AffectsRender)
+            );
+        public int MaxDataLength
+        {
+            get => (int)GetValue(MaxDataLengthProperty);
+            set => SetValue(MaxDataLengthProperty, value);
+        }
+
+        public static readonly DependencyProperty ButtonStyleProperty =
+            DependencyProperty.Register("ButtonStyle", typeof(Style), typeof(JsonViewer), new PropertyMetadata(null, OnButtonStyleChanged));
+        public Style ButtonStyle
+        {
+            get => (Style)GetValue(ButtonStyleProperty);
+            set => SetValue(ButtonStyleProperty, value);
+        }
+        private static void OnButtonStyleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = d as JsonViewer;
+            control?.UpdateButtonStyles();
+        }
+
+        private void UpdateButtonStyles()
+        {
+            if (ButtonStyle != null)
+            {
+                //var derivedButtonStyle = new Style(typeof(Button), ButtonStyle);
+
+                foreach (var button in FindVisualChildren<Button>(this))
+                {
+                    var newStyle = new Style(typeof(Button), ButtonStyle);
+
+                    // Copy setters
+                    foreach (var setter in button.Style.Setters)
+                    {
+                        newStyle.Setters.Add(setter);
+                    }
+
+                    // Copy triggers
+                    foreach (var trigger in button.Style.Triggers)
+                    {
+                        newStyle.Triggers.Add(trigger);
+                    }
+
+                    // Copy resources
+                    foreach (var resourceKey in button.Style.Resources.Keys)
+                    {
+                        newStyle.Resources[resourceKey] = button.Style.Resources[resourceKey];
+                    }
+
+                    button.Style = newStyle;
+                }
+            }
+        }
+
+        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child != null && child is T)
+                    {
+                        yield return (T)child;
+                    }
+
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
+
+
         public JsonViewer()
         {
             InitializeComponent();
+
+            this.Loaded +=  (s, e) => UpdateButtonStyles();
+            ;
         }
 
         private void IterateJToken(JToken token)

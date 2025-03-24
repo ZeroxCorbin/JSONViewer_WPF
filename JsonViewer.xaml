@@ -31,14 +31,12 @@
             <valueConverters:JValueTypeToColorConverter x:Key="JValueTypeToColorConverter" />
             <valueConverters:JArrayLengthConverter x:Key="JArrayLengthConverter" />
 
-
             <HierarchicalDataTemplate DataType="{x:Type jlinq:JArray}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
                 <StackPanel Margin="1" Orientation="Horizontal">
                     <TextBlock
                         Margin="0,0,5,0"
                         Padding="3,0,3,1"
                         Background="#a40000"
-                        Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}"
                         Opacity="0.4"
                         Text="array" />
                     <TextBlock Foreground="#a40000" Text="{Binding Converter={StaticResource JArrayLengthConverter}}" />
@@ -50,7 +48,7 @@
                 DataType="{x:Type jlinq:JProperty}"
                 ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
                 <StackPanel Margin="1" Orientation="Horizontal">
-                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}" Text="{Binding Path=Name, Mode=OneWay}" />
+                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
                     <TextBlock Text=" " />
                     <!--<TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>-->
                     <TextBlock Foreground="#a40000" Text="{Binding Converter={StaticResource JArrayLengthConverter}}" />
@@ -62,7 +60,7 @@
                 DataType="{x:Type jlinq:JProperty}"
                 ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
                 <StackPanel Margin="1" Orientation="Horizontal">
-                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}" Text="{Binding Path=Name, Mode=OneWay}" />
+                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
                     <TextBlock Text=" " />
                     <TextBlock Foreground="#729fcf" Text="{}{ }" />
                 </StackPanel>
@@ -70,7 +68,7 @@
 
             <HierarchicalDataTemplate x:Key="HexPropertyTemplate" DataType="{x:Type jlinq:JProperty}">
                 <StackPanel Margin="1" Orientation="Horizontal">
-                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}" Text="{Binding Path=Name, Mode=OneWay}" />
+                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
                     <TextBlock Text=" " />
 
                     <ScrollViewer Height="100">
@@ -89,8 +87,8 @@
             <DataTemplate x:Key="PrimitivePropertyTemplate" DataType="{x:Type jlinq:JProperty}">
 
                 <StackPanel Margin="1" Orientation="Horizontal">
-                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}" Text="{Binding Path=Name, Mode=OneWay}" />
-                    <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}" Text=" : " />
+                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+                    <TextBlock Text=" : " />
                     <TextBlock Text=" " />
 
                     <TextBlock
@@ -178,7 +176,9 @@
                 <Button
                     x:Name="btnSaveJSON"
                     Click="btnSaveJSON_Click"
-                    ToolTip="Save JSON">
+                    ToolTip="Save JSON"
+                    Margin="6">
+
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="IsEnabled" Value="True" />
@@ -210,9 +210,9 @@
                 </DockPanel.Style>
 
                 <Button
-                    Margin="6,0,3,0"
                     Click="ExpandAll"
-                    ToolTip="Expand All">
+                    ToolTip="Expand All"
+                    Margin="6">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="IsEnabled" Value="True" />
@@ -233,7 +233,8 @@
                 <Button
                     HorizontalAlignment="Left"
                     Click="CollapseAll"
-                    ToolTip="Collapse All">
+                    ToolTip="Collapse All"
+                    Margin="6">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="IsEnabled" Value="True" />
@@ -258,11 +259,8 @@
 
         <TreeView
             Name="JsonTreeView"
-            Width="260"
             Margin="3"
-            Background="{Binding Background, RelativeSource={RelativeSource AncestorType=UserControl}}"
             BorderThickness="0"
-            Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}"
             IsTextSearchEnabled="True"
             ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}">
             <TreeView.ItemContainerStyle>
