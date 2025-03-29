@@ -159,7 +159,7 @@
                 </Style>
             </DockPanel.Style>
 
-            <TextBlock d:Text="This is a Title" Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+            <TextBlock d:Text="This is a Title" Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" VerticalAlignment="Center"/>
 
             <DockPanel Margin="6,0,0,0" HorizontalAlignment="Left">
                 <DockPanel.Style>
