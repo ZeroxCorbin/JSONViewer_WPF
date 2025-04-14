@@ -178,7 +178,7 @@
 
                 <Button
                     x:Name="btnSaveJSON"
-                    Margin="6"
+                    Margin="3,0"
                     Click="btnSaveJSON_Click"
                     ToolTip="Save JSON">
 
@@ -213,7 +213,7 @@
                 </DockPanel.Style>
 
                 <Button
-                    Margin="6"
+                    Margin="3,0"
                     Click="ExpandAll"
                     ToolTip="Expand All">
                     <Button.Style>
@@ -234,7 +234,7 @@
                 </Button>
 
                 <Button
-                    Margin="6"
+                    Margin="3,0"
                     HorizontalAlignment="Left"
                     Click="CollapseAll"
                     ToolTip="Collapse All">
