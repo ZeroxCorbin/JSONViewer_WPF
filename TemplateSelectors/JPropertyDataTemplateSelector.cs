@@ -24,10 +24,10 @@ namespace JSONViewer_WPF.TemplateSelectors
                 return null;
             }
 
-            System.Type type = item.GetType();
+            var type = item.GetType();
             if (type == typeof(JProperty))
             {
-                JProperty? jProperty = item as JProperty;
+                var jProperty = item as JProperty;
                 return jProperty.Value.Type switch
                 {
                     JTokenType.Object => ObjectPropertyTemplate,

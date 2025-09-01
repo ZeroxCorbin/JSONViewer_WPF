@@ -16,7 +16,7 @@ namespace JSONViewer_WPF.JsonHelpers
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            JToken token = JToken.Load(reader);
+            var token = JToken.Load(reader);
 
             if (token.Type == JTokenType.Object)
             {
@@ -30,7 +30,7 @@ namespace JSONViewer_WPF.JsonHelpers
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            JToken token = value as JToken ?? JToken.FromObject(value, serializer);
+            var token = value as JToken ?? JToken.FromObject(value, serializer);
             token.WriteTo(writer);
         }
 

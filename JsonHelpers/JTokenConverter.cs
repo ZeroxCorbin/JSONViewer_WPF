@@ -11,7 +11,7 @@ namespace JSONViewer_WPF.JsonHelpers
     {
         public override JToken ReadJson(JsonReader reader, Type objectType, JToken existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            JToken token = JToken.Load(reader);
+            var token = JToken.Load(reader);
 
             if (token.Type == JTokenType.Object || token.Type == JTokenType.Array)
             {
