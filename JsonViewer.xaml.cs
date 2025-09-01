@@ -361,10 +361,16 @@ namespace JSONViewer_WPF
             }
             else
             {
-                itemGen.StatusChanged += delegate
+                itemGen.StatusChanged += OnItemGenStatusChanged;
+            }
+
+            void OnItemGenStatusChanged(object sender, EventArgs e)
+            {
+                if (itemGen.Status == Generated)
                 {
                     Recurse(items, isExpanded, itemGen);
-                };
+                    itemGen.StatusChanged -= OnItemGenStatusChanged; // Unsubscribe
+                }
             }
         }
 
@@ -373,11 +379,12 @@ namespace JSONViewer_WPF
             var itemGen = parentContainer.ItemContainerGenerator;
             if (itemGen.Status == Generated)
             {
-                if(items.Count == 0)
+                if (items.Count == 0)
                     return;
 
                 var tvi = itemGen.ContainerFromItem(items[0]) as TreeViewItem;
-                tvi.IsExpanded = isExpanded;
+                if (tvi != null)
+                    tvi.IsExpanded = isExpanded;
 
                 //if(tvi.Items.Count == 1)
                 //{
@@ -386,21 +393,27 @@ namespace JSONViewer_WPF
             }
             else
             {
-                itemGen.StatusChanged += delegate
+                itemGen.StatusChanged += OnItemGenStatusChanged;
+            }
+
+            void OnItemGenStatusChanged(object sender, EventArgs e)
+            {
+                if (itemGen.Status == Generated)
                 {
-                    if (items.Count <= 0) return;
-
-                    var tvi = itemGen.ContainerFromItem(items[0]) as TreeViewItem;
-
-                    if (tvi == null) return;
-
-                    tvi.IsExpanded = isExpanded;
-
-                    //if (tvi.Items.Count == 1)
-                    //{
-                    //    ToggleFirstItem(parentContainer, tvi.Items, isExpanded);
-                    //}
-                };
+                    if (items.Count > 0)
+                    {
+                        var tvi = itemGen.ContainerFromItem(items[0]) as TreeViewItem;
+                        if (tvi != null)
+                        {
+                            tvi.IsExpanded = isExpanded;
+                            //if (tvi.Items.Count == 1)
+                            //{
+                            //    ToggleFirstItem(parentContainer, tvi.Items, isExpanded);
+                            //}
+                        }
+                    }
+                    itemGen.StatusChanged -= OnItemGenStatusChanged; // Unsubscribe
+                }
             }
         }
 
