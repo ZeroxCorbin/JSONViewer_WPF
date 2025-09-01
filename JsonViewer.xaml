@@ -15,14 +15,6 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <Style x:Key="GroupHeaderCirlceButton" TargetType="Button">
-                <Setter Property="BorderThickness" Value="0" />
-                <Setter Property="Width" Value="22" />
-                <Setter Property="Height" Value="22" />
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="Margin" Value="3,0" />
-                <Setter Property="HorizontalAlignment" Value="Left" />
-            </Style>
 
             <valueConverters:MethodToValueConverter x:Key="MethodToValueConverter" />
             <valueConverters:ComplexPropertyMethodToValueConverter x:Key="ComplexPropertyMethodToValueConverter" />
