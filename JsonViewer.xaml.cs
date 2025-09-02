@@ -445,7 +445,7 @@ namespace JSONViewer_WPF
             }
             catch(Exception ex)
             {
-                Logger.LogError(ex);
+                Logger.Error(ex);
             }
 
         }
