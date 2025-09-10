@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,40 +16,166 @@ using Newtonsoft.Json.Linq;
 namespace JSONViewer_WPF
 {
     /// <summary>
-    /// Interaction logic for JSONViewer_WPF.xaml
+    /// Interaction logic for JsonViewer.xaml
     /// </summary>
     public partial class JsonViewer : UserControl
     {
+        // -------------------- Dependency Properties --------------------
+
+        /// <summary>
+        /// JSON data to display. Accepts string or object.
+        /// </summary>
+        public static readonly DependencyProperty JSONProperty =
+            DependencyProperty.Register(
+                name: "JSON",
+                propertyType: typeof(object),
+                ownerType: typeof(JsonViewer),
+                typeMetadata: new FrameworkPropertyMetadata(
+                    defaultValue: null,
+                    flags: FrameworkPropertyMetadataOptions.AffectsRender,
+                    propertyChangedCallback: new PropertyChangedCallback(JSONProperty_OnChanged))
+            );
+
+        /// <summary>
+        /// Title for the viewer.
+        /// </summary>
+        public static readonly DependencyProperty TitleProperty =
+            DependencyProperty.Register(
+                name: "Title",
+                propertyType: typeof(string),
+                ownerType: typeof(JsonViewer),
+                typeMetadata: new FrameworkPropertyMetadata(
+                    defaultValue: "",
+                    flags: FrameworkPropertyMetadataOptions.AffectsRender)
+            );
+
+        /// <summary>
+        /// Hide all control buttons.
+        /// </summary>
+        public static readonly DependencyProperty HideButtonsProperty =
+            DependencyProperty.Register(
+                name: "HideButtons",
+                propertyType: typeof(bool),
+                ownerType: typeof(JsonViewer),
+                typeMetadata: new FrameworkPropertyMetadata(
+                    defaultValue: false,
+                    flags: FrameworkPropertyMetadataOptions.AffectsRender)
+            );
+
+        /// <summary>
+        /// Show the save button.
+        /// </summary>
+        public static readonly DependencyProperty ShowSaveButtonProperty =
+            DependencyProperty.Register(
+                name: "ShowSaveButton",
+                propertyType: typeof(bool),
+                ownerType: typeof(JsonViewer),
+                typeMetadata: new FrameworkPropertyMetadata(
+                    defaultValue: false,
+                    flags: FrameworkPropertyMetadataOptions.AffectsRender)
+            );
+
+        /// <summary>
+        /// Maximum data length to display.
+        /// </summary>
+        public static readonly DependencyProperty MaxDataLengthProperty =
+            DependencyProperty.Register(
+                name: "MaxDataLength",
+                propertyType: typeof(int),
+                ownerType: typeof(JsonViewer),
+                typeMetadata: new FrameworkPropertyMetadata(
+                    defaultValue: 1000,
+                    flags: FrameworkPropertyMetadataOptions.AffectsRender)
+            );
+
+        /// <summary>
+        /// Style for buttons in the viewer.
+        /// </summary>
+        public static readonly DependencyProperty ButtonStyleProperty =
+            DependencyProperty.Register(
+                "ButtonStyle",
+                typeof(Style),
+                typeof(JsonViewer),
+                new PropertyMetadata(null, OnButtonStyleChanged)
+            );
+
+        // -------------------- Properties --------------------
+
+        /// <summary>
+        /// Gets or sets the JSON data.
+        /// </summary>
+        public object JSON
+        {
+            get => GetValue(JSONProperty);
+            set => SetValue(JSONProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the title.
+        /// </summary>
+        public string Title
+        {
+            get => (string)GetValue(TitleProperty);
+            set => SetValue(TitleProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets whether buttons are hidden.
+        /// </summary>
+        public bool HideButtons
+        {
+            get => (bool)GetValue(HideButtonsProperty);
+            set => SetValue(HideButtonsProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets whether the save button is shown.
+        /// </summary>
+        public bool ShowSaveButton
+        {
+            get => (bool)GetValue(ShowSaveButtonProperty);
+            set => SetValue(ShowSaveButtonProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum data length.
+        /// </summary>
+        public int MaxDataLength
+        {
+            get => (int)GetValue(MaxDataLengthProperty);
+            set => SetValue(MaxDataLengthProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the style for buttons.
+        /// </summary>
+        public Style ButtonStyle
+        {
+            get => (Style)GetValue(ButtonStyleProperty);
+            set => SetValue(ButtonStyleProperty, value);
+        }
+
+        // -------------------- Private Fields --------------------
+
         private const GeneratorStatus Generated = GeneratorStatus.ContainersGenerated;
         private DispatcherTimer _timer;
 
+        // -------------------- Constructor --------------------
 
-        //private string json;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JsonViewer"/> class.
+        /// </summary>
+        public JsonViewer()
+        {
+            InitializeComponent();
+            Loaded += (s, e) => UpdateButtonStyles();
+        }
 
-        //public string JSON
-        //{
-        //    get { return json; }
-        //    set
-        //    { 
-        //        json = value;
+        // -------------------- Dependency Property Callbacks --------------------
 
-        //        Load(json, "");
-        //    }
-        //}
-
-        // Register a dependency property with the specified property name,
-        // property type, owner type, and property metadata. Store the dependency
-        // property identifier as a public static readonly member of the class.
-        public static readonly DependencyProperty JSONProperty =
-            DependencyProperty.Register(
-              name: "JSON",
-              propertyType: typeof(object),
-              ownerType: typeof(JsonViewer),
-              typeMetadata: new FrameworkPropertyMetadata(
-                  defaultValue: null,
-                  flags: FrameworkPropertyMetadataOptions.AffectsRender,
-                  propertyChangedCallback: new PropertyChangedCallback(JSONProperty_OnChanged))
-            );
+        /// <summary>
+        /// Handles changes to the JSON property.
+        /// </summary>
         private static void JSONProperty_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = (JsonViewer)d;
@@ -59,120 +184,49 @@ namespace JSONViewer_WPF
             else
                 control.Load(e.NewValue);
         }
-        public object JSON
-        {
-            get => GetValue(JSONProperty);
-            set => SetValue(JSONProperty, value);
-        }
 
-        public static readonly DependencyProperty TitleProperty =
-            DependencyProperty.Register(
-            name: "Title",
-            propertyType: typeof(string),
-            ownerType: typeof(JsonViewer),
-            typeMetadata: new FrameworkPropertyMetadata(
-                defaultValue: "",
-                flags: FrameworkPropertyMetadataOptions.AffectsRender)
-            );
-
-        public string Title
-        {
-            get => (string)GetValue(TitleProperty);
-            set => SetValue(TitleProperty, value);
-        }
-
-
-        public static readonly DependencyProperty HideButtonsProperty =
-            DependencyProperty.Register(
-            name: "HideButtons",
-            propertyType: typeof(bool),
-            ownerType: typeof(JsonViewer),
-            typeMetadata: new FrameworkPropertyMetadata(
-                defaultValue: false,
-                flags: FrameworkPropertyMetadataOptions.AffectsRender)
-            );
-        public bool HideButtons
-        {
-            get => (bool)GetValue(HideButtonsProperty);
-            set => SetValue(HideButtonsProperty, value);
-        }
-
-        public static readonly DependencyProperty ShowSaveButtonProperty =
-            DependencyProperty.Register(
-            name: "ShowSaveButton",
-            propertyType: typeof(bool),
-            ownerType: typeof(JsonViewer),
-            typeMetadata: new FrameworkPropertyMetadata(
-                defaultValue: false,
-                flags: FrameworkPropertyMetadataOptions.AffectsRender)
-            );
-        public bool ShowSaveButton
-        {
-            get => (bool)GetValue(ShowSaveButtonProperty);
-            set => SetValue(ShowSaveButtonProperty, value);
-        }
-
-        public static readonly DependencyProperty MaxDataLengthProperty =
-            DependencyProperty.Register(
-            name: "MaxDataLength",
-            propertyType: typeof(int),
-            ownerType: typeof(JsonViewer),
-            typeMetadata: new FrameworkPropertyMetadata(
-                defaultValue: 1000,
-                flags: FrameworkPropertyMetadataOptions.AffectsRender)
-            );
-        public int MaxDataLength
-        {
-            get => (int)GetValue(MaxDataLengthProperty);
-            set => SetValue(MaxDataLengthProperty, value);
-        }
-
-        public static readonly DependencyProperty ButtonStyleProperty =
-            DependencyProperty.Register("ButtonStyle", typeof(Style), typeof(JsonViewer), new PropertyMetadata(null, OnButtonStyleChanged));
-        public Style ButtonStyle
-        {
-            get => (Style)GetValue(ButtonStyleProperty);
-            set => SetValue(ButtonStyleProperty, value);
-        }
+        /// <summary>
+        /// Handles changes to the ButtonStyle property.
+        /// </summary>
         private static void OnButtonStyleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = d as JsonViewer;
             control?.UpdateButtonStyles();
         }
 
+        // -------------------- UI Helpers --------------------
+
+        /// <summary>
+        /// Updates the style of all buttons in the visual tree.
+        /// </summary>
         private void UpdateButtonStyles()
         {
             if (ButtonStyle != null)
             {
-                //var derivedButtonStyle = new Style(typeof(Button), ButtonStyle);
-
                 foreach (var button in FindVisualChildren<Button>(this))
                 {
                     var newStyle = new Style(typeof(Button), ButtonStyle);
 
                     // Copy setters
                     foreach (var setter in button.Style.Setters)
-                    {
                         newStyle.Setters.Add(setter);
-                    }
 
                     // Copy triggers
                     foreach (var trigger in button.Style.Triggers)
-                    {
                         newStyle.Triggers.Add(trigger);
-                    }
 
                     // Copy resources
                     foreach (var resourceKey in button.Style.Resources.Keys)
-                    {
                         newStyle.Resources[resourceKey] = button.Style.Resources[resourceKey];
-                    }
 
                     button.Style = newStyle;
                 }
             }
         }
 
+        /// <summary>
+        /// Recursively finds all visual children of a given type.
+        /// </summary>
         private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
         {
             if (depObj != null)
@@ -180,74 +234,20 @@ namespace JSONViewer_WPF
                 for (var i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
                 {
                     var child = VisualTreeHelper.GetChild(depObj, i);
-                    if (child != null && child is T)
-                    {
-                        yield return (T)child;
-                    }
+                    if (child is T tChild)
+                        yield return tChild;
 
                     foreach (var childOfChild in FindVisualChildren<T>(child))
-                    {
                         yield return childOfChild;
-                    }
                 }
             }
         }
 
+        // -------------------- JSON Loading and Manipulation --------------------
 
-        public JsonViewer()
-        {
-            InitializeComponent();
-
-            this.Loaded +=  (s, e) => UpdateButtonStyles();
-            ;
-        }
-
-        private void IterateJToken(JToken token)
-        {
-            foreach (var tok in token)
-            {
-                //If the Token has children, loop through them first
-                if (tok.HasValues)
-                {
-                    IterateJToken(tok);
-                    continue;
-                }
-
-                //If the Token is a value and not a parent, then check for a matching Token
-                if (UpdateMatchingItemSource((JToken)JsonTreeView.ItemsSource, tok))
-                    return;
-            }
-        }
-
-        private bool UpdateMatchingItemSource(JToken inside, JToken find)
-        {
-            foreach (var ins in inside)
-            {
-                //If the Token has children, loop through them first
-                if (ins.HasValues)
-                {
-                    if (UpdateMatchingItemSource(ins, find))
-                        return true;
-                    continue;
-                }
-
-                //var customObject = ins.ToObject<CustomNotifyPropertyChangedObject>();
-
-                if (((JValue)ins).Path == ((JValue)find).Path)
-                {
-                    ((JValue)ins).Value = ((JValue)find).Value;
-                    return true;
-                }
-                else
-                {
-
-                }
-
-            }
-
-            return false;
-        }
-
+        /// <summary>
+        /// Loads JSON from a string.
+        /// </summary>
         private void Load(string json)
         {
             if (string.IsNullOrEmpty(json))
@@ -255,7 +255,6 @@ namespace JSONViewer_WPF
                 JsonTreeView.ItemsSource = null;
                 return;
             }
-
 
             try
             {
@@ -267,6 +266,9 @@ namespace JSONViewer_WPF
             }
         }
 
+        /// <summary>
+        /// Loads JSON from an object.
+        /// </summary>
         private void Load(object obj)
         {
             if (obj == null)
@@ -275,11 +277,9 @@ namespace JSONViewer_WPF
                 return;
             }
 
-
             try
             {
                 JsonTreeView.ItemsSource = JObject.FromObject(obj);
-                //JsonTreeView.ItemsSource = JToken.FromObject(obj);
                 ToggleFirstItem(true);
             }
             catch (Exception ex)
@@ -288,70 +288,108 @@ namespace JSONViewer_WPF
             }
         }
 
-        private void JValue_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// Iterates through a JToken and updates matching items in the tree.
+        /// </summary>
+        private void IterateJToken(JToken token)
         {
-            if (e.ClickCount != 2)
-                return;
-
-            var tb = sender as TextBlock;
-            if (tb != null)
+            foreach (var tok in token)
             {
-                Clipboard.SetText(tb.Text);
+                if (tok.HasValues)
+                {
+                    IterateJToken(tok);
+                    continue;
+                }
+
+                if (UpdateMatchingItemSource((JToken)JsonTreeView.ItemsSource, tok))
+                    return;
             }
         }
 
+        /// <summary>
+        /// Updates the value of a matching JToken in the tree.
+        /// </summary>
+        private bool UpdateMatchingItemSource(JToken inside, JToken find)
+        {
+            foreach (var ins in inside)
+            {
+                if (ins.HasValues)
+                {
+                    if (UpdateMatchingItemSource(ins, find))
+                        return true;
+                    continue;
+                }
+
+                if (((JValue)ins).Path == ((JValue)find).Path)
+                {
+                    ((JValue)ins).Value = ((JValue)find).Value;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // -------------------- TreeView Expansion/Collapse --------------------
+
+        /// <summary>
+        /// Expands all items in the tree.
+        /// </summary>
         private void ExpandAll(object sender, RoutedEventArgs e)
         {
             ToggleItems(true);
         }
 
+        /// <summary>
+        /// Collapses all items in the tree.
+        /// </summary>
         private void CollapseAll(object sender, RoutedEventArgs e)
         {
             ToggleItems(false);
         }
 
+        /// <summary>
+        /// Toggles expansion state for all items.
+        /// </summary>
         private void ToggleItems(bool isExpanded)
         {
             if (JsonTreeView.Items.IsEmpty)
                 return;
 
             var prevCursor = Cursor;
-            //System.Windows.Controls.DockPanel.Opacity = 0.2;
-            //System.Windows.Controls.DockPanel.IsEnabled = false;
             Cursor = Cursors.Wait;
             _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(500), DispatcherPriority.Normal, delegate
             {
                 ToggleItems(JsonTreeView, JsonTreeView.Items, isExpanded);
                 if (!isExpanded)
                     ToggleFirstItem(JsonTreeView, JsonTreeView.Items, true);
-                //System.Windows.Controls.DockPanel.Opacity = 1.0;
-                //System.Windows.Controls.DockPanel.IsEnabled = true;
                 _timer.Stop();
                 Cursor = prevCursor;
             }, Application.Current.Dispatcher);
             _timer.Start();
         }
 
+        /// <summary>
+        /// Expands/collapses only the first item in the tree.
+        /// </summary>
         private void ToggleFirstItem(bool isExpanded)
         {
             if (JsonTreeView.Items.IsEmpty)
                 return;
 
             var prevCursor = Cursor;
-            //System.Windows.Controls.DockPanel.Opacity = 0.2;
-            //System.Windows.Controls.DockPanel.IsEnabled = false;
             Cursor = Cursors.Wait;
             _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(500), DispatcherPriority.Normal, delegate
             {
                 ToggleFirstItem(JsonTreeView, JsonTreeView.Items, isExpanded);
-                //System.Windows.Controls.DockPanel.Opacity = 1.0;
-                //System.Windows.Controls.DockPanel.IsEnabled = true;
                 _timer.Stop();
                 Cursor = prevCursor;
             }, Application.Current.Dispatcher);
             _timer.Start();
         }
 
+        /// <summary>
+        /// Recursively toggles expansion state for items.
+        /// </summary>
         private void ToggleItems(ItemsControl parentContainer, ItemCollection items, bool isExpanded)
         {
             var itemGen = parentContainer.ItemContainerGenerator;
@@ -364,16 +402,19 @@ namespace JSONViewer_WPF
                 itemGen.StatusChanged += OnItemGenStatusChanged;
             }
 
-            void OnItemGenStatusChanged(object sender, EventArgs e)
+            void OnItemGenStatusChanged(object? sender, EventArgs e)
             {
                 if (itemGen.Status == Generated)
                 {
                     Recurse(items, isExpanded, itemGen);
-                    itemGen.StatusChanged -= OnItemGenStatusChanged; // Unsubscribe
+                    itemGen.StatusChanged -= OnItemGenStatusChanged;
                 }
             }
         }
 
+        /// <summary>
+        /// Toggles expansion state for the first item.
+        /// </summary>
         private void ToggleFirstItem(ItemsControl parentContainer, ItemCollection items, bool isExpanded)
         {
             var itemGen = parentContainer.ItemContainerGenerator;
@@ -385,18 +426,13 @@ namespace JSONViewer_WPF
                 var tvi = itemGen.ContainerFromItem(items[0]) as TreeViewItem;
                 if (tvi != null)
                     tvi.IsExpanded = isExpanded;
-
-                //if(tvi.Items.Count == 1)
-                //{
-                //    ToggleFirstItem(parentContainer, tvi.Items, isExpanded);
-                //}
             }
             else
             {
                 itemGen.StatusChanged += OnItemGenStatusChanged;
             }
 
-            void OnItemGenStatusChanged(object sender, EventArgs e)
+            void OnItemGenStatusChanged(object? sender, EventArgs e)
             {
                 if (itemGen.Status == Generated)
                 {
@@ -404,19 +440,16 @@ namespace JSONViewer_WPF
                     {
                         var tvi = itemGen.ContainerFromItem(items[0]) as TreeViewItem;
                         if (tvi != null)
-                        {
                             tvi.IsExpanded = isExpanded;
-                            //if (tvi.Items.Count == 1)
-                            //{
-                            //    ToggleFirstItem(parentContainer, tvi.Items, isExpanded);
-                            //}
-                        }
                     }
-                    itemGen.StatusChanged -= OnItemGenStatusChanged; // Unsubscribe
+                    itemGen.StatusChanged -= OnItemGenStatusChanged;
                 }
             }
         }
 
+        /// <summary>
+        /// Recursively expands/collapses all TreeViewItems.
+        /// </summary>
         private void Recurse(ItemCollection items, bool isExpanded, ItemContainerGenerator itemGen)
         {
             if (itemGen.Status != Generated)
@@ -430,38 +463,55 @@ namespace JSONViewer_WPF
             }
         }
 
+        // -------------------- Event Handlers --------------------
+
+        /// <summary>
+        /// Handles double-click on a JValue to copy its text to clipboard.
+        /// </summary>
+        private void JValue_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount != 2)
+                return;
+
+            if (sender is TextBlock tb)
+                Clipboard.SetText(tb.Text.Trim('\"'));
+        }
+
+        /// <summary>
+        /// Handles save button click to save JSON to file.
+        /// </summary>
         private void btnSaveJSON_Click(object sender, RoutedEventArgs e)
         {
-            string path;
-            if ((path = GetSaveFilePath(Title, "JSON|*.json", "Save JSON")) == "")
+            string path = GetSaveFilePath(Title, "JSON|*.json", "Save JSON");
+            if (string.IsNullOrEmpty(path))
                 return;
 
             try
             {
-                if(JSON is string s)
+                if (JSON is string s)
                     System.IO.File.WriteAllText(path, s);
                 else
                     System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(JSON, Formatting.Indented));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Error(ex);
             }
-
         }
+
+        /// <summary>
+        /// Shows a SaveFileDialog and returns the selected file path.
+        /// </summary>
         private string GetSaveFilePath(string fileName, string filter, string title)
         {
             var saveFileDialog1 = new SaveFileDialog
             {
-                Filter = filter,//|Gif Image|*.gif|JPeg Image|*.jpg";
+                Filter = filter,
                 Title = title,
                 FileName = fileName
             };
 
-            if (saveFileDialog1.ShowDialog() == true)
-                return saveFileDialog1.FileName;
-            else
-                return "";
+            return saveFileDialog1.ShowDialog() == true ? saveFileDialog1.FileName : "";
         }
     }
 }
