@@ -100,9 +100,9 @@
                         <TextBlock.Text>
                             <MultiBinding Converter="{StaticResource JObjectIndexConverter}">
                                 <Binding />
-                                <!-- The JObject itself -->
+                                <!--  The JObject itself  -->
                                 <Binding Path="Parent" />
-                                <!-- The JArray (parent property value) -->
+                                <!--  The JArray (parent property value)  -->
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
