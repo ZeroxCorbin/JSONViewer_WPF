@@ -207,7 +207,7 @@
                 </Button>
             </DockPanel>
 
-            <DockPanel>
+            <DockPanel Margin="6,3,3,3" HorizontalAlignment="Left">
                 <DockPanel.Style>
                     <Style TargetType="{x:Type DockPanel}">
                         <Setter Property="Visibility" Value="Visible" />
