@@ -172,103 +172,73 @@
                 d:Text="This is a Title"
                 Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}" />
 
-            <DockPanel Margin="6,3,3,3" HorizontalAlignment="Left">
-                <DockPanel.Style>
-                    <Style TargetType="{x:Type DockPanel}">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ShowSaveButton, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </DockPanel.Style>
+            <ToolBarTray>
+                <ToolBar>
+                    <Button
+                        x:Name="btnSaveJSON"
+                        Click="btnSaveJSON_Click"
+                        ToolTip="Save JSON">
 
-                <Button
-                    x:Name="btnSaveJSON"
-                    Click="btnSaveJSON_Click"
-                    ToolTip="Save JSON">
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+                                <Setter Property="IsEnabled" Value="True" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ShowSaveButton, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
 
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="IsEnabled" Value="True" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
-                                    <Setter Property="IsEnabled" Value="False" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
+                        <iconPacks:PackIconMaterial Kind="ContentSave" />
+                    </Button>
 
-                    <iconPacks:PackIconMaterial
-                        Width="20"
-                        Height="20"
-                        Kind="ContentSave" />
-                </Button>
-            </DockPanel>
+                    <Separator />
 
-            <DockPanel Margin="6,3,3,3" HorizontalAlignment="Left">
-                <DockPanel.Style>
-                    <Style TargetType="{x:Type DockPanel}">
-                        <Setter Property="Visibility" Value="Visible" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding HideButtons, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </DockPanel.Style>
+                    <Button Click="ExpandAll" ToolTip="Expand All">
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+                                <Setter Property="IsEnabled" Value="True" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding HideButtons, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
 
-                <Button Click="ExpandAll" ToolTip="Expand All">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="IsEnabled" Value="True" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
-                                    <Setter Property="IsEnabled" Value="False" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
+                        <iconPacks:PackIconMaterial Kind="ExpandAll" />
+                    </Button>
 
-                    <iconPacks:PackIconMaterial
-                        Width="20"
-                        Height="20"
-                        Kind="ExpandAll" />
-                </Button>
+                    <Button
+                        Margin="3,0,0,0"
+                        Click="CollapseAll"
+                        ToolTip="Collapse All">
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+                                <Setter Property="IsEnabled" Value="True" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding HideButtons, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
 
-                <Button
-                    Margin="3,0"
-                    HorizontalAlignment="Left"
-                    Click="CollapseAll"
-                    ToolTip="Collapse All">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="IsEnabled" Value="True" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
-                                    <Setter Property="IsEnabled" Value="False" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-
-                    <iconPacks:PackIconMaterial
-                        Width="20"
-                        Height="20"
-                        Kind="CollapseAll" />
-                </Button>
-
-            </DockPanel>
-
+                        <iconPacks:PackIconMaterial Kind="CollapseAll" />
+                    </Button>
+                </ToolBar>
+            </ToolBarTray>
         </DockPanel>
-
-        <Border
-            Grid.Row="1"
-            Height="1"
-            Margin="3,1"
-            VerticalAlignment="Center"
-            Background="LightGray" />
 
         <TreeView
             Name="JsonTreeView"
