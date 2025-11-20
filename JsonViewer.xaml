@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="JSONViewer_WPF.JsonViewer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
