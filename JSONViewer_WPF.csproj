@@ -12,6 +12,13 @@
     <OutputType>Library</OutputType>
 
     <ImplicitUsings>enable</ImplicitUsings>
+    <Configurations>Debug;Release;PublicRelease</Configurations>
+  </PropertyGroup>
+
+  <!-- PublicRelease configuration -->
+  <PropertyGroup Condition="'$(Configuration)' == 'PublicRelease'">
+    <Optimize>true</Optimize>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
