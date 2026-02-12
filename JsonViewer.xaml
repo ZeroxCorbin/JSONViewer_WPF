@@ -180,7 +180,7 @@
                         ToolTip="Save JSON">
 
                         <Button.Style>
-                            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+                            <Style BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" TargetType="Button">
                                 <Setter Property="IsEnabled" Value="True" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
@@ -200,7 +200,7 @@
 
                     <Button Click="ExpandAll" ToolTip="Expand All">
                         <Button.Style>
-                            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+                            <Style BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" TargetType="Button">
                                 <Setter Property="IsEnabled" Value="True" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding JSON, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
@@ -216,10 +216,7 @@
                         <iconPacks:PackIconMaterial Kind="ExpandAll" />
                     </Button>
 
-                    <Button
-                        Margin="3,0,0,0"
-                        Click="CollapseAll"
-                        ToolTip="Collapse All">
+                    <Button Click="CollapseAll" ToolTip="Collapse All">
                         <Button.Style>
                             <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
                                 <Setter Property="IsEnabled" Value="True" />
