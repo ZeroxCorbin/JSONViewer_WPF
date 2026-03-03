@@ -1,6 +1,4 @@
-﻿using System;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Data;
 using Newtonsoft.Json.Linq;
 
@@ -8,24 +6,15 @@ namespace JSONViewer_WPF.ValueConverters
 {
     public sealed class JArrayLengthConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var jToken = value as JToken;
-            if (jToken == null)
-                return null;//throw new Exception("Wrong type for this converter");
+            if (value is JArray array)
+                return $"[{array.Count}]";
 
-            switch (jToken.Type)
-            {
-                case JTokenType.Array:
-                    var arrayLen = jToken.Children().Count();
-                    return string.Format("[{0}]", arrayLen);
-                case JTokenType.Property:
-                    var propertyArrayLen = jToken.Children().FirstOrDefault().Children().Count();
-                    return string.Format("[ {0} ]", propertyArrayLen);
-                default:
-                    return null;
-                    //throw new Exception("Type should be JProperty or JArray");
-            }
+            if (value is JProperty property && property.Value is JArray propertyArray)
+                return $"[ {propertyArray.Count} ]";
+
+            return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

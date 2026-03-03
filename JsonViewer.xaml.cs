@@ -30,9 +30,8 @@ namespace JSONViewer_WPF
                 name: "JSON",
                 propertyType: typeof(object),
                 ownerType: typeof(JsonViewer),
-                typeMetadata: new FrameworkPropertyMetadata(
+                typeMetadata: new PropertyMetadata(
                     defaultValue: null,
-                    flags: FrameworkPropertyMetadataOptions.AffectsRender,
                     propertyChangedCallback: new PropertyChangedCallback(JSONProperty_OnChanged))
             );
 
@@ -158,7 +157,9 @@ namespace JSONViewer_WPF
         // -------------------- Private Fields --------------------
 
         private const GeneratorStatus Generated = GeneratorStatus.ContainersGenerated;
-        private DispatcherTimer _timer;
+        private readonly DispatcherTimer _jsonLoadTimer;
+        private object? _pendingJson;
+        private object? _lastLoadedJson;
 
         // -------------------- Constructor --------------------
 
@@ -168,7 +169,19 @@ namespace JSONViewer_WPF
         public JsonViewer()
         {
             InitializeComponent();
-            Loaded += (s, e) => UpdateButtonStyles();
+
+            _jsonLoadTimer = new DispatcherTimer(DispatcherPriority.Background, Dispatcher)
+            {
+                Interval = TimeSpan.FromMilliseconds(120)
+            };
+            _jsonLoadTimer.Tick += JsonLoadTimer_Tick;
+
+            Loaded += (_, _) => UpdateButtonStyles();
+            Unloaded += (_, _) =>
+            {
+                _jsonLoadTimer.Stop();
+                _pendingJson = null;
+            };
         }
 
         // -------------------- Dependency Property Callbacks --------------------
@@ -179,10 +192,7 @@ namespace JSONViewer_WPF
         private static void JSONProperty_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = (JsonViewer)d;
-            if (e.NewValue is string str)
-                control.Load(str);
-            else
-                control.Load(e.NewValue);
+            control.ScheduleJsonLoad(e.NewValue);
         }
 
         /// <summary>
@@ -194,6 +204,46 @@ namespace JSONViewer_WPF
             control?.UpdateButtonStyles();
         }
 
+        private void ScheduleJsonLoad(object? value)
+        {
+            if (IsSameSource(value, _lastLoadedJson))
+                return;
+
+            _pendingJson = value;
+            _jsonLoadTimer.Stop();
+            _jsonLoadTimer.Start();
+        }
+
+        private void JsonLoadTimer_Tick(object? sender, EventArgs e)
+        {
+            _jsonLoadTimer.Stop();
+
+            var value = _pendingJson;
+            _pendingJson = null;
+
+            if (IsSameSource(value, _lastLoadedJson))
+                return;
+
+            LoadJsonValue(value);
+            _lastLoadedJson = value;
+        }
+
+        private void LoadJsonValue(object? value)
+        {
+            if (value is string str)
+                Load(str);
+            else
+                Load(value);
+        }
+
+        private static bool IsSameSource(object? left, object? right)
+        {
+            if (left is string leftString && right is string rightString)
+                return string.Equals(leftString, rightString, StringComparison.Ordinal);
+
+            return false;
+        }
+
         // -------------------- UI Helpers --------------------
 
         /// <summary>
@@ -201,26 +251,30 @@ namespace JSONViewer_WPF
         /// </summary>
         private void UpdateButtonStyles()
         {
-            if (ButtonStyle != null)
+            if (ButtonStyle == null)
+                return;
+
+            foreach (var button in FindVisualChildren<Button>(this))
             {
-                foreach (var button in FindVisualChildren<Button>(this))
+                var existingStyle = button.Style;
+                if (existingStyle == null || ReferenceEquals(existingStyle, ButtonStyle))
                 {
-                    var newStyle = new Style(typeof(Button), ButtonStyle);
-
-                    // Copy setters
-                    foreach (var setter in button.Style.Setters)
-                        newStyle.Setters.Add(setter);
-
-                    // Copy triggers
-                    foreach (var trigger in button.Style.Triggers)
-                        newStyle.Triggers.Add(trigger);
-
-                    // Copy resources
-                    foreach (var resourceKey in button.Style.Resources.Keys)
-                        newStyle.Resources[resourceKey] = button.Style.Resources[resourceKey];
-
-                    button.Style = newStyle;
+                    button.Style = ButtonStyle;
+                    continue;
                 }
+
+                var mergedStyle = new Style(typeof(Button), ButtonStyle);
+
+                foreach (SetterBase setter in existingStyle.Setters)
+                    mergedStyle.Setters.Add(setter);
+
+                foreach (TriggerBase trigger in existingStyle.Triggers)
+                    mergedStyle.Triggers.Add(trigger);
+
+                foreach (object resourceKey in existingStyle.Resources.Keys)
+                    mergedStyle.Resources[resourceKey] = existingStyle.Resources[resourceKey];
+
+                button.Style = mergedStyle;
             }
         }
 
@@ -250,7 +304,7 @@ namespace JSONViewer_WPF
         /// </summary>
         private void Load(string json)
         {
-            if (string.IsNullOrEmpty(json))
+            if (string.IsNullOrWhiteSpace(json))
             {
                 JsonTreeView.ItemsSource = null;
                 return;
@@ -258,18 +312,19 @@ namespace JSONViewer_WPF
 
             try
             {
-                JsonTreeView.ItemsSource = JsonConvert.DeserializeObject<JToken>(json);
+                JsonTreeView.ItemsSource = JToken.Parse(json);
+                ToggleFirstItem(true);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Could not open the JSON string:\r\n" + ex.Message);
+                Logger.Error(ex, "Could not open JSON string.");
             }
         }
 
         /// <summary>
         /// Loads JSON from an object.
         /// </summary>
-        private void Load(object obj)
+        private void Load(object? obj)
         {
             if (obj == null)
             {
@@ -279,12 +334,12 @@ namespace JSONViewer_WPF
 
             try
             {
-                JsonTreeView.ItemsSource = JObject.FromObject(obj);
+                JsonTreeView.ItemsSource = obj as JToken ?? JToken.FromObject(obj);
                 ToggleFirstItem(true);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Could not open the JSON string:\r\n" + ex.Message);
+                Logger.Error(ex, "Could not open JSON object.");
             }
         }
 
@@ -357,15 +412,25 @@ namespace JSONViewer_WPF
 
             var prevCursor = Cursor;
             Cursor = Cursors.Wait;
-            _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(500), DispatcherPriority.Normal, delegate
+
+            var timer = new DispatcherTimer(DispatcherPriority.Background, Dispatcher)
             {
+                Interval = TimeSpan.FromMilliseconds(120)
+            };
+
+            void OnTick(object? sender, EventArgs args)
+            {
+                timer.Stop();
+                timer.Tick -= OnTick;
+
                 ToggleItems(JsonTreeView, JsonTreeView.Items, isExpanded);
                 if (!isExpanded)
                     ToggleFirstItem(JsonTreeView, JsonTreeView.Items, true);
-                _timer.Stop();
                 Cursor = prevCursor;
-            }, Application.Current.Dispatcher);
-            _timer.Start();
+            }
+
+            timer.Tick += OnTick;
+            timer.Start();
         }
 
         /// <summary>
@@ -378,13 +443,23 @@ namespace JSONViewer_WPF
 
             var prevCursor = Cursor;
             Cursor = Cursors.Wait;
-            _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(500), DispatcherPriority.Normal, delegate
+
+            var timer = new DispatcherTimer(DispatcherPriority.Background, Dispatcher)
             {
+                Interval = TimeSpan.FromMilliseconds(120)
+            };
+
+            void OnTick(object? sender, EventArgs args)
+            {
+                timer.Stop();
+                timer.Tick -= OnTick;
+
                 ToggleFirstItem(JsonTreeView, JsonTreeView.Items, isExpanded);
-                _timer.Stop();
                 Cursor = prevCursor;
-            }, Application.Current.Dispatcher);
-            _timer.Start();
+            }
+
+            timer.Tick += OnTick;
+            timer.Start();
         }
 
         /// <summary>
@@ -458,6 +533,9 @@ namespace JSONViewer_WPF
             foreach (var item in items)
             {
                 var tvi = itemGen.ContainerFromItem(item) as TreeViewItem;
+                if (tvi == null)
+                    continue;
+
                 tvi.IsExpanded = isExpanded;
                 ToggleItems(tvi, tvi.Items, isExpanded);
             }
@@ -490,6 +568,8 @@ namespace JSONViewer_WPF
             {
                 if (JSON is string s)
                     System.IO.File.WriteAllText(path, s);
+                else if (JSON is JToken token)
+                    System.IO.File.WriteAllText(path, token.ToString(Formatting.Indented));
                 else
                     System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(JSON, Formatting.Indented));
             }
